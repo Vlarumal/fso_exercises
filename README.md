@@ -1,1 +1,1 @@
-# fso_exercises
+# Full Stack Open exercises
