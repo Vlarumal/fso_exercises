@@ -2,8 +2,18 @@ import { useState } from "react";
 
 const Header = ({ text }) => <h1>{text}</h1>;
 
-const Button = ({ onClick, feefback }) => {
-  return <button onClick={onClick}>{feefback}</button>;
+const Button = ({ onClick, feedback }) => {
+  return <button onClick={onClick}>{feedback}</button>;
+};
+
+// const Statistics = ({ total }) => total;
+
+const StatLine = ({ name, result }) => {
+  return (
+    <p>
+      {name} {result}
+    </p>
+  );
 };
 
 const App = () => {
@@ -13,11 +23,18 @@ const App = () => {
     bad: 0,
   });
 
+  const [total, setTotal] = useState(0);
+
+  const increaseTotalByOne = () => {
+    setTotal(total + 1);
+  };
+
   const handleGoodClick = () => {
     setClicks({
       ...clicks,
       good: clicks.good + 1,
     });
+    increaseTotalByOne();
   };
 
   const handleNeutralClick = () => {
@@ -25,6 +42,7 @@ const App = () => {
       ...clicks,
       neutral: clicks.neutral + 1,
     });
+    increaseTotalByOne();
   };
 
   const handleBadClick = () => {
@@ -32,6 +50,21 @@ const App = () => {
       ...clicks,
       bad: clicks.bad + 1,
     });
+    increaseTotalByOne();
+  };
+
+  const calculateAverage = () => {
+    if (!total) return 0;
+    const average =
+      (clicks.good * 1 + clicks.neutral * 0 + clicks.bad * -1) /
+      total;
+    return average;
+  };
+
+  const calculatePositive = () => {
+    if (!total) return 0;
+    const positive = (clicks.good / total) * 100;
+    return positive;
   };
 
   return (
@@ -39,20 +72,46 @@ const App = () => {
       <Header text='give feedback' />
       <Button
         onClick={handleGoodClick}
-        feefback='good'
+        feedback='good'
       />
       <Button
         onClick={handleNeutralClick}
-        feefback='neutral'
+        feedback='neutral'
       />
       <Button
         onClick={handleBadClick}
-        feefback='bad'
+        feedback='bad'
       />
       <Header text='statistics' />
-      <p>good {clicks.good}</p>
+      {/* <Statistics total={total} /> */}
+      <StatLine
+        name='good'
+        result={clicks.good}
+      />
+      <StatLine
+        name='neutral'
+        result={clicks.neutral}
+      />
+      <StatLine
+        name='bad'
+        result={clicks.bad}
+      />
+      <StatLine
+        name='all'
+        result={total}
+      />
+      <StatLine
+        name='average'
+        result={calculateAverage()}
+      />
+      <StatLine
+        name='positive'
+        result={`${calculatePositive()} %`}
+      />
+      {/* <p>good {clicks.good}</p>
       <p>neutral {clicks.neutral}</p>
       <p>bad {clicks.bad}</p>
+      <p>all</p> */}
     </div>
   );
 };
