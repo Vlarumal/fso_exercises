@@ -6,10 +6,10 @@ const Button = ({ onClick, feedback }) => {
   return <button onClick={onClick}>{feedback}</button>;
 };
 
-const StatLine = ({ name, result }) => {
+const StatisticLine = ({ text, value }) => {
   return (
     <p>
-      {name} {result}
+      {text} {value}
     </p>
   );
 };
@@ -31,29 +31,29 @@ const Statistics = ({ clicks, total }) => {
 
   return (
     <>
-      <StatLine
-        name='good'
-        result={clicks.good}
+      <StatisticLine
+        text='good'
+        value={clicks.good}
       />
-      <StatLine
-        name='neutral'
-        result={clicks.neutral}
+      <StatisticLine
+        text='neutral'
+        value={clicks.neutral}
       />
-      <StatLine
-        name='bad'
-        result={clicks.bad}
+      <StatisticLine
+        text='bad'
+        value={clicks.bad}
       />
-      <StatLine
-        name='all'
-        result={total}
+      <StatisticLine
+        text='all'
+        value={total}
       />
-      <StatLine
-        name='average'
-        result={calculateAverage()}
+      <StatisticLine
+        text='average'
+        value={calculateAverage()}
       />
-      <StatLine
-        name='positive'
-        result={`${calculatePositive()} %`}
+      <StatisticLine
+        text='positive'
+        value={`${calculatePositive()} %`}
       />
     </>
   );
