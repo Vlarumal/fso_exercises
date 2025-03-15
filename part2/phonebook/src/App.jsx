@@ -34,10 +34,9 @@ const App = () => {
 
     axios.post(url, person).then((response) => {
       setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
     });
-
-    setNewName("");
-    setNewNumber("");
   };
 
   const checkForDuplicates = (name) => {
