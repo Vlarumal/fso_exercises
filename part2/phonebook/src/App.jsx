@@ -11,6 +11,7 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
   const [persons, setPersons] = useState([]);
   const [notification, setNotification] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -27,19 +28,31 @@ const App = () => {
 
     const nameToCheck = newName;
     if (checkForDuplicates(nameToCheck)) {
-      const userAnswer = window.confirm(
-        `${person.name} is already added to phonebook, replace the old number with a new one?`
-      );
-      if (userAnswer) {
-        const personId = persons.find(
-          (p) => p.name === person.name
-        ).id;
-        updateNumber(personId, person);
-        notifySuccess(person.name, true);
-      }
+      handleDuplicate(person);
       return;
     }
 
+    createPerson(person);
+  };
+
+  const checkForDuplicates = (name) => {
+    return persons.some((person) => person.name === name);
+  };
+
+  const handleDuplicate = (person) => {
+    const userAnswer = window.confirm(
+      `${person.name} is already added to phonebook, replace the old number with a new one?`
+    );
+
+    if (userAnswer) {
+      const personId = persons.find((p) => p.name === person.name).id;
+      updateNumber(personId, person);
+      notifySuccess(person.name, true);
+    }
+    return;
+  };
+
+  const createPerson = (person) => {
     personService.create(person).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
       notifySuccess(returnedPerson.name);
@@ -48,21 +61,19 @@ const App = () => {
     });
   };
 
-  const checkForDuplicates = (name) => {
-    return persons.some((person) => person.name === name);
-  };
-
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}`))
-      personService.deletePerson(person.id).then(() => {
-        getAllAgain();
-      });
+      personService
+        .deletePerson(person.id)
+        .catch((error) => notifyError(person.name))
+        .finally(() => getAllAgain());
   };
 
   const updateNumber = (id, newPerson) => {
-    personService.update(id, newPerson).then(() => {
-      getAllAgain();
-    });
+    personService
+      .update(id, newPerson)
+      .catch((error) => notifyError(newPerson.name))
+      .finally(() => getAllAgain());
   };
 
   const getAllAgain = () => {
@@ -71,15 +82,28 @@ const App = () => {
     });
   };
 
-  const notifySuccess = (name, numberChanged) => {
-    if (!numberChanged) {
-      setNotification(`Added ${name}`);
-    } else {
-      setNotification(`Changed ${name}'s number`);
-    }
+  const notify = (message, isError = false) => {
+    setNotification(message);
+    setIsError(isError);
     setTimeout(() => {
       setNotification(null);
+      setIsError(false);
     }, 5000);
+  };
+
+  const notifySuccess = (name, numberChanged) => {
+    if (!numberChanged) {
+      notify(`Added ${name}`);
+    } else {
+      notify(`Changed ${name}'s number`);
+    }
+  };
+
+  const notifyError = (name) => {
+    notify(
+      `Information of ${name} has already been removed from server`,
+      true
+    );
   };
 
   const handleSearchChange = (e) => {
@@ -102,7 +126,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification
+        message={notification}
+        isError={isError}
+      />
       <Filter onChange={handleSearchChange} />
       <h3>add a new</h3>
       <PersonForm
