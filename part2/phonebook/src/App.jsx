@@ -11,15 +11,14 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    personService.getAll().then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
   const addPerson = (e) => {
     e.preventDefault();
     const person = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };
@@ -30,8 +29,8 @@ const App = () => {
       return;
     }
 
-    personService.create(person).then((response) => {
-      setPersons(persons.concat(response.data));
+    personService.create(person).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
     });
@@ -39,6 +38,16 @@ const App = () => {
 
   const checkForDuplicates = (name) => {
     return persons.some((person) => person.name === name);
+  };
+
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}`))
+      personService.deletePerson(person.id).then(() => {
+        personService.getAll().then((returnedPersons) => {
+          setPersons(returnedPersons);
+        });
+        // setPersons(persons.filter((p) => p.id !== person.id)); // Commented out optimization
+      });
   };
 
   const handleSearchChange = (e) => {
@@ -71,7 +80,10 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons personsToDisplay={personsToDisplay} />
+      <Persons
+        personsToDisplay={personsToDisplay}
+        onClick={deletePerson}
+      />
     </div>
   );
 };
