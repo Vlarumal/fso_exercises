@@ -3,12 +3,14 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [persons, setPersons] = useState([]);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -33,12 +35,14 @@ const App = () => {
           (p) => p.name === person.name
         ).id;
         updateNumber(personId, person);
+        notifySuccess(person.name, true);
       }
       return;
     }
 
     personService.create(person).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
+      notifySuccess(returnedPerson.name);
       setNewName("");
       setNewNumber("");
     });
@@ -67,6 +71,17 @@ const App = () => {
     });
   };
 
+  const notifySuccess = (name, numberChanged) => {
+    if (!numberChanged) {
+      setNotification(`Added ${name}`);
+    } else {
+      setNotification(`Changed ${name}'s number`);
+    }
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
   const handleSearchChange = (e) => {
     const personToSearchFor = e.target.value.toLowerCase();
     setSearchValue(personToSearchFor);
@@ -87,6 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter onChange={handleSearchChange} />
       <h3>add a new</h3>
       <PersonForm
