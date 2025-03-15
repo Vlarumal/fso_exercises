@@ -9,12 +9,22 @@ const App = () => {
     const person = {
       name: newName,
     };
+
+    const nameToCheck = newName;
+    if (checkForDuplicates(nameToCheck)) {
+      alert(`${nameToCheck} is already added to the phonebook`);
+      return;
+    }
     setPersons(persons.concat(person));
     setNewName("");
   };
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
+  };
+
+  const checkForDuplicates = (name) => {
+    return persons.some((person) => person.name === name);
   };
 
   return (
@@ -26,6 +36,7 @@ const App = () => {
           <input
             value={newName}
             onChange={handleNameChange}
+            autoFocus
           />
         </div>
         <div>
