@@ -25,7 +25,15 @@ const App = () => {
 
     const nameToCheck = newName;
     if (checkForDuplicates(nameToCheck)) {
-      alert(`${nameToCheck} is already added to the phonebook`);
+      const userAnswer = window.confirm(
+        `${person.name} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (userAnswer) {
+        const personId = persons.find(
+          (p) => p.name === person.name
+        ).id;
+        updateNumber(personId, person);
+      }
       return;
     }
 
@@ -43,11 +51,20 @@ const App = () => {
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}`))
       personService.deletePerson(person.id).then(() => {
-        personService.getAll().then((returnedPersons) => {
-          setPersons(returnedPersons);
-        });
-        // setPersons(persons.filter((p) => p.id !== person.id)); // Commented out optimization
+        getAllAgain();
       });
+  };
+
+  const updateNumber = (id, newPerson) => {
+    personService.update(id, newPerson).then(() => {
+      getAllAgain();
+    });
+  };
+
+  const getAllAgain = () => {
+    personService.getAll().then((returnedPersons) => {
+      setPersons(returnedPersons);
+    });
   };
 
   const handleSearchChange = (e) => {

@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const PersonForm = ({
   newName,
   newNumber,
@@ -7,7 +5,6 @@ const PersonForm = ({
   handleNumberChange,
   onSubmit,
 }) => {
-    
   return (
     <form onSubmit={onSubmit}>
       <div>
