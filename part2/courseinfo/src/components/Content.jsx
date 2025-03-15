@@ -6,7 +6,7 @@ const Content = ({ parts }) => {
     <>
       {parts.map((part) => (
         <Part
-          key={`${part.id}`}
+          key={part.id}
           partName={part.name}
           exercises={part.exercises}
         />
