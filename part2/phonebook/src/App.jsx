@@ -32,7 +32,10 @@ const App = () => {
       return;
     }
 
-    setPersons(persons.concat(person));
+    axios.post(url, person).then((response) => {
+      setPersons(persons.concat(response.data));
+    });
+
     setNewName("");
     setNewNumber("");
   };
