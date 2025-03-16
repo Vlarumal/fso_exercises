@@ -1,8 +1,8 @@
 const SingleCountry = ({ foundCountry }) => {
-  const country = foundCountry[0];
+  const country = foundCountry;
   const languages = country.languages;
   const flags = country.flags;
-  
+
   return (
     <>
       <h1>{country.name.common}</h1>

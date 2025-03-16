@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import SingleCountry from "./components/SingleCountry";
+import Countries from "./components/Countries";
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
@@ -51,11 +52,16 @@ function App() {
       <>
         {foundCountries.length === 1 ? (
           <>
-            <SingleCountry foundCountry={foundCountries} />
+            <SingleCountry foundCountry={foundCountries[0]} />
           </>
         ) : foundCountries.length <= 10 ? (
           foundCountries.map((country) => (
-            <pre key={country.name.common}>{country.name.common}</pre>
+            <>
+              <Countries
+                key={country.name.common}
+                country={country}
+              />
+            </>
           ))
         ) : (
           <pre>Too many matches, specify another filter</pre>
