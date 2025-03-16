@@ -56,12 +56,10 @@ function App() {
           </>
         ) : foundCountries.length <= 10 ? (
           foundCountries.map((country) => (
-            <>
-              <Countries
-                key={country.name.common}
-                country={country}
-              />
-            </>
+            <Countries
+              key={country.cca3}
+              country={country}
+            />
           ))
         ) : (
           <pre>Too many matches, specify another filter</pre>

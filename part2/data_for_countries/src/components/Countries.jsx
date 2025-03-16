@@ -10,12 +10,16 @@ const Countries = ({ country }) => {
 
   return (
     <>
-      {country.name.common}{" "}
-      <button onClick={handleShow}>
-        {showComponent ? "hide" : "show"}
-      </button>
-      <br />
-      {showComponent && <SingleCountry foundCountry={country} />}
+      <div>
+        {country.name.common}{" "}
+        <button onClick={handleShow}>
+          {showComponent ? "hide" : "show"}
+        </button>
+        <br />
+      </div>
+      <div>
+        {showComponent && <SingleCountry foundCountry={country} />}
+      </div>
     </>
   );
 };
