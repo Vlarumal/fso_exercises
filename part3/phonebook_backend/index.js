@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     id: "1",
@@ -41,6 +43,34 @@ app.get("/api/persons/:id", (req, res) => {
   } else {
     res.status(404).end();
   }
+});
+
+const randomizeId = () => {
+  const id = Math.floor(
+    Math.random() * Math.pow(persons.length, persons.length)
+  ).toString();
+
+  return id;
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return res.status(404).json({
+      error: "name or number is missing",
+    });
+  }
+
+  const person = {
+    id: randomizeId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+
+  res.json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
