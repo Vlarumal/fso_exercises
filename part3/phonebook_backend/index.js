@@ -53,12 +53,20 @@ const randomizeId = () => {
   return id;
 };
 
+const checkForDuplicates = (name) => {
+  return persons.some((person) => person.name === name);
+};
+
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
   if (!body.name || !body.number) {
-    return res.status(404).json({
+    return res.status(400).json({
       error: "name or number is missing",
+    });
+  } else if (checkForDuplicates(body.name)) {
+    return res.status(400).json({
+      error: "name must be unique",
     });
   }
 
