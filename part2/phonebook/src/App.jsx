@@ -98,9 +98,9 @@ const App = () => {
   };
 
   const notifySuccess = (name, numberChanged) => {
-    if (!numberChanged && !isError) {
+    if (!numberChanged && isError === false) {
       notify(`Added ${name}`);
-    } else if (!isError) {
+    } else if (isError === false) {
       notify(`Changed ${name}'s number`);
     }
   };
