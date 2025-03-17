@@ -78,7 +78,7 @@ const App = () => {
   const updateNumber = (id, newPerson) => {
     personService
       .update(id, newPerson)
-      .catch((error) => notifyError(newPerson.name))
+      .catch((error) => notifyError(error.response.data.error))
       .finally(() => getAllAgain());
   };
 
