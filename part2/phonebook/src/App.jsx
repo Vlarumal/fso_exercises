@@ -53,19 +53,25 @@ const App = () => {
   };
 
   const createPerson = (person) => {
-    personService.create(person).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      notifySuccess(returnedPerson.name);
-      setNewName("");
-      setNewNumber("");
-    });
+    personService
+      .create(person)
+      .then((createdPerson) => {
+        setPersons(persons.concat(createdPerson));
+        notifySuccess(createdPerson.name);
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        notifyError(error.response.data.error);
+        console.log(error.response.data.error);
+      });
   };
 
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}`))
       personService
         .deletePerson(person.id)
-        .catch((error) => notifyError(person.name))
+        .catch((error) => notifyError(error))
         .finally(() => getAllAgain());
   };
 
@@ -99,9 +105,10 @@ const App = () => {
     }
   };
 
-  const notifyError = (name) => {
+  const notifyError = (error) => {
     notify(
-      `Information of ${name} has already been removed from server`,
+      // `Information of ${name} has already been removed from server`,
+      `${error}`,
       true
     );
   };
