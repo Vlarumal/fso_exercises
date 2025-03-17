@@ -38,26 +38,18 @@ app.get("/api/persons/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-// const checkForDuplicates = (name) => {
-//   return persons.some((person) => person.name === name);
-// };
-
 app.post("/api/persons", (req, res) => {
-  const body = req.body;
+  const { name, number } = req.body;
 
-  if (!body.name || !body.number) {
+  if (!name || !number) {
     return res.status(400).json({
       error: "name or number is missing",
     });
-  } // else if (checkForDuplicates(body.name)) {
-  //   return res.status(400).json({
-  //     error: "name must be unique",
-  //   });
-  // }
+  }
 
   const person = new Person({
-    name: body.name,
-    number: body.number,
+    name,
+    number,
   });
 
   person
@@ -76,14 +68,47 @@ app.delete("/api/persons/:id", (req, res) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
+
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (!person) {
+        return res.status(404).end();
+      }
+
+      person.name = name;
+      person.number = number;
+
+      return person.save().then((updatedPerson) => {
+        res.json(updatedPerson);
+      });
+    })
+    .catch((error) => next(error));
+});
+
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has info for ${Person.length} people</p>
+    ${new Date().toString()}`
+  );
+});
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
 const errorHandler = (error, req, res, next) => {
   console.log(error.message);
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
-  } else {
-    return res.status(400).send({ error: "Something went wrong" });
   }
+  // else {
+  //   return res.status(400).send({ error: "Something went wrong" });
+  // }
 
   next(error);
 };
