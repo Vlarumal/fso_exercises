@@ -18,10 +18,6 @@ app.use(
   )
 );
 
-app.get("/", (req, res) => {
-  res.send('<a href="/api/persons">Go to Persons</a>');
-});
-
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
     res.json(persons);
@@ -29,27 +25,14 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const person = persons.find((p) => p.id === id);
-
-  if (person) {
+  Person.findById(req.params.id).then((person) => {
     res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  });
 });
 
-const randomizeId = () => {
-  const id = Math.floor(
-    Math.random() * Math.pow(persons.length, persons.length)
-  ).toString();
-
-  return id;
-};
-
-const checkForDuplicates = (name) => {
-  return persons.some((person) => person.name === name);
-};
+// const checkForDuplicates = (name) => {
+//   return persons.some((person) => person.name === name);
+// };
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
@@ -58,21 +41,20 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json({
       error: "name or number is missing",
     });
-  } else if (checkForDuplicates(body.name)) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  } // else if (checkForDuplicates(body.name)) {
+  //   return res.status(400).json({
+  //     error: "name must be unique",
+  //   });
+  // }
 
-  const person = {
-    id: randomizeId(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
-
-  res.json(person);
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
