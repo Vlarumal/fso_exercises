@@ -58,8 +58,23 @@ describe('tests for post', () => {
 
     const latestBlog = body[body.length - 1]
     const { id, ...addedBlog } = latestBlog
-    
+
     assert.deepStrictEqual(addedBlog, newBlog)
+  })
+
+  test('if the likes property is missing from the request, it will default to the value 0', async () => {
+    const newBlog = new Blog({
+      title: 'Without likes',
+      author: 'Nameless',
+      url: 'https://test.com',
+    })
+
+    await api.post('/api/blogs').send(newBlog)
+
+    const { body } = await api.get('/api/blogs')
+    const latestBlog = body[body.length - 1]
+
+    assert.strictEqual(latestBlog.likes, 0)
   })
 })
 
