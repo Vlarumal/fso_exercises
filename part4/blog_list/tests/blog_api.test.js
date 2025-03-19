@@ -63,11 +63,11 @@ describe('tests for post', () => {
   })
 
   test('if the likes property is missing from the request, it will default to the value 0', async () => {
-    const newBlog = new Blog({
+    const newBlog = {
       title: 'Without likes',
       author: 'Nameless',
       url: 'https://test.com',
-    })
+    }
 
     await api.post('/api/blogs').send(newBlog)
 
@@ -75,6 +75,26 @@ describe('tests for post', () => {
     const latestBlog = body[body.length - 1]
 
     assert.strictEqual(latestBlog.likes, 0)
+  })
+
+  test('blog without title or url is not added', async () => {
+    const blogNoTitle = {
+      author: 'Nameless',
+      url: 'https://test.com',
+    }
+
+    const blogNoUrl = {
+      title: 'Where is url?',
+      author: 'Nameless',
+    }
+
+    const blogNoTitleNoUrl = {
+      author: 'Nameless',
+    }
+
+    await api.post('/api/blogs').send(blogNoTitle).expect(400)
+    await api.post('/api/blogs').send(blogNoUrl).expect(400)
+    await api.post('/api/blogs').send(blogNoTitleNoUrl).expect(400)
   })
 })
 
