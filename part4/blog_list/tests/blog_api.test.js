@@ -114,6 +114,31 @@ describe('tests for delete', () => {
   })
 })
 
+describe('tests for put', () => {
+  test('a blog can be updated', async () => {
+    const blogToUpdate = (await helper.blogsInDb())[0]
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1,
+    }
+
+    await api
+      .put(`/api/blogs/${updatedBlog.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    const blogsAfter = await helper.blogsInDb()
+    const blogAfterUpdateInDB = blogsAfter.find(
+      (blog) => blog.id === blogToUpdate.id
+    )
+
+    assert.strictEqual(
+      blogAfterUpdateInDB.likes,
+      blogToUpdate.likes + 1
+    )
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
