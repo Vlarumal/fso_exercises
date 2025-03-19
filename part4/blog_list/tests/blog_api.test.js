@@ -32,14 +32,14 @@ describe('tests for get', () => {
 
   test('returns the unique identifier property id, not _id.', async () => {
     const { body } = await api.get('/api/blogs')
-    
+
     assert(Object.keys(body[0]).includes('id'))
     assert(!Object.keys(body[0]).includes('_id'))
   })
 })
 
 describe('tests for post', () => {
-  test('a valid blog can be added', async () => {
+  test('a valid blog can be added, length increased by one, saved correctly', async () => {
     const newBlog = {
       title: 'Go To Statement Considered Harmful',
       author: 'Edsger W. Dijkstra',
@@ -52,6 +52,14 @@ describe('tests for post', () => {
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
+
+    const { body } = await api.get('/api/blogs')
+    assert.strictEqual(body.length, helper.initialBlogs.length + 1)
+
+    const latestBlog = body[body.length - 1]
+    const { id, ...addedBlog } = latestBlog
+    
+    assert.deepStrictEqual(addedBlog, newBlog)
   })
 })
 
