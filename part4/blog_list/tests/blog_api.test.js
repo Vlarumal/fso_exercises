@@ -1,48 +1,17 @@
 const { test, after, beforeEach, describe } = require('node:test')
-const Blog = require('../models/blog')
 const assert = require('node:assert')
-const mongoose = require('mongoose')
 const supertest = require('supertest')
+const mongoose = require('mongoose')
+
 const app = require('../app')
+const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
-const initialBlogs = [
-  {
-    title: 'Exploring the Wonders of Space',
-    author: 'Astrid Starlight',
-    url: 'https://astridstarlight.spaceblog.com',
-    likes: 1,
-  },
-  {
-    title: 'The Art of Cooking Vegan',
-    author: 'Lily Greenleaf',
-    url: 'https://lilygreenleaf.cookingblog.com',
-    likes: 2,
-  },
-  {
-    title: 'Understanding AI and Its Future',
-    author: 'Maxwell Tech',
-    url: 'https://maxwelltech.aiinsights.com',
-    likes: 8,
-  },
-  {
-    title: 'Traveling the World on a Budget',
-    author: 'Samantha Wanderer',
-    url: 'https://samanthawanderer.travelblog.com',
-    likes: 5,
-  },
-  {
-    title: 'The Magic of Photography',
-    author: 'Ethan Lensman',
-    url: 'https://ethanlensman.photographyblog.com',
-    likes: 9,
-  },
-]
-
 beforeEach(async () => {
   await Blog.deleteMany({})
-  for (const blog of initialBlogs) {
+  for (const blog of helper.initialBlogs) {
     await new Blog(blog).save()
   }
 })
@@ -58,7 +27,14 @@ describe('tests for get', () => {
   test('there is a correct amount of blogs', async () => {
     const { body } = await api.get('/api/blogs')
 
-    assert.strictEqual(body.length, initialBlogs.length)
+    assert.strictEqual(body.length, helper.initialBlogs.length)
+  })
+
+  test('returns the unique identifier property id, not _id.', async () => {
+    const { body } = await api.get('/api/blogs')
+    
+    assert(Object.keys(body[0]).includes('id'))
+    assert(!Object.keys(body[0]).includes('_id'))
   })
 })
 
