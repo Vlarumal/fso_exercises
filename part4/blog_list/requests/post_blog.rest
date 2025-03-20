@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3ZGMzNGY3ZjZmYmY5OGUwZTMyMmM1ZiIsImlhdCI6MTc0MjQ5NjI1MH0.0iKeYsJVebPMrp6aGeCKyNa29h42JPY8_mBc_VuSWMU
 
 {
-    "title": "Adding user's implementation",
-    "author": "qwe",
+    "title": "Adding jwt's implementation",
+    "author": "Someone",
     "url": "https://example.com/blog/qwe",
-    "likes": 42
+    "likes": 3
 }
