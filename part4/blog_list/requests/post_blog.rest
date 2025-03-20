@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "Optimizing React Performance",
-    "author": "Lila Singh",
-    "url": "https://example.com/blog/react-optimization",
-    "likes": 150
+    "title": "Adding user's implementation",
+    "author": "qwe",
+    "url": "https://example.com/blog/qwe",
+    "likes": 42
 }
