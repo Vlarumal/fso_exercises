@@ -16,7 +16,6 @@ describe('when there is initially one user in db', () => {
 
     const passwordHash = await bcrypt.hash('sekret', 10)
     const user = new User({ username: 'root', passwordHash })
-    console.log(user)
 
     await user.save()
   })
@@ -41,6 +40,32 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map((u) => u.username)
     assert(usernames.includes(newUser.username))
+  })
+
+  test('users with username or password less than 3 characters are not created', async () => {
+    const invalidUser = {
+      username: 'ab',
+      name: 'aba',
+      password: 'ab',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(invalidUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usernames = (await helper.usersInDb()).map(
+      (u) => u.username
+    )
+    assert(!usernames.includes(invalidUser.username))
+
+    const { error } = response.body
+    assert(
+      error.includes(
+        'Username and Password must be at least 3 characters long'
+      )
+    )
   })
 })
 
