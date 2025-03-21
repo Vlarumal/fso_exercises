@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', {
@@ -11,15 +12,10 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
-blogsRouter.post('/', async (req, res) => {
+blogsRouter.post('/', middleware.userExtractor, async (req, res) => {
   const body = req.body
 
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = req.user
 
   if (!user) {
     return res.status(400).send('There are no users in the DB')
@@ -44,32 +40,28 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(result)
 })
 
-blogsRouter.delete('/:id', async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
+blogsRouter.delete(
+  '/:id',
+  middleware.userExtractor,
+  async (req, res) => {
+    const blog = await Blog.findById(req.params.id)
 
-  if (!blog) {
-    return res.status(404).json({ error: 'blog not found' })
-  }
+    if (!blog) {
+      return res.status(404).json({ error: 'blog not found' })
+    }
 
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' })
-  }
+    const user = req.user
 
-  const user = await User.findById(decodedToken.id)
-  if (!user) {
-    return res.status(404).json({ error: 'user not found' })
+    if (blog.user.toString() === user.id.toString()) {
+      await Blog.findByIdAndDelete(blog.id)
+      return res.status(204).end()
+    } else {
+      return res
+        .status(401)
+        .json({ error: 'you are not authorized to delete this blog' })
+    }
   }
-
-  if (blog.user.toString() === user.id.toString()) {
-    await Blog.findByIdAndDelete(blog.id)
-    return res.status(204).end()
-  } else {
-    return res
-      .status(401)
-      .json({ error: 'you are not authorized to delete this blog' })
-  }
-})
+)
 
 blogsRouter.put('/:id', async (req, res) => {
   const { title, author, url, likes } = req.body
