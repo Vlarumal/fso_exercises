@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,6 +12,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState({ message: null })
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -41,14 +43,10 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      clearLoginForm()
     } catch (exception) {
-      console.error('Wrong credentials', exception)
-      // setErrorMessage('Wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
+      console.error('Wrong username or password', exception)
+      notify('Wrong username or password', true)
     }
   }
 
@@ -58,14 +56,10 @@ const App = () => {
     try {
       window.localStorage.removeItem('loggedBloglistappUser')
       setUser(null)
-      setUsername('')
-      setPassword('')
+      clearLoginForm()
     } catch (exception) {
       console.error('Something went wrong', exception)
-      // setErrorMessage('Something went wrong')
-      // setTimeout(() => {
-      // setErrorMessage(null)
-      // }, 5000)
+      notify('Something went wrong', true)
     }
   }
 
@@ -89,14 +83,34 @@ const App = () => {
 
     const returnedBlog = await blogService.create(blogObj)
     setBlogs(blogs.concat(returnedBlog))
+    notify(
+      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+    )
+    clearBlogForm()
+  }
+
+  const clearLoginForm = () => {
+    setUsername('')
+    setPassword('')
+  }
+
+  const clearBlogForm = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
   }
 
+  const notify = (message, isError = false) => {
+    setNotification({ message, isError })
+    setTimeout(() => {
+      setNotification({ message: null })
+    }, 5000)
+  }
+
   const loginForm = () => (
     <>
       <h2>Log in to application</h2>
+      <Notification notification={notification} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -166,6 +180,7 @@ const App = () => {
       ) : (
         <div>
           <h2>blogs</h2>
+          <Notification notification={notification} />
           <p>
             {user.name} logged-in{' '}
             <button
