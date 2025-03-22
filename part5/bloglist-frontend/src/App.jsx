@@ -8,6 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -66,6 +69,31 @@ const App = () => {
     }
   }
 
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value)
+  }
+  const handleAuthorChange = (event) => {
+    setAuthor(event.target.value)
+  }
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value)
+  }
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    const blogObj = {
+      title,
+      author,
+      url,
+    }
+
+    const returnedBlog = await blogService.create(blogObj)
+    setBlogs(blogs.concat(returnedBlog))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   const loginForm = () => (
     <>
       <h2>Log in to application</h2>
@@ -93,13 +121,43 @@ const App = () => {
     </>
   )
 
-  const blogForm = () =>
-    blogs.map((blog) => (
-      <Blog
-        key={blog.id}
-        blog={blog}
-      />
-    ))
+  const blogForm = () => (
+    <>
+      <h2>create new</h2>
+      <form onSubmit={addBlog}>
+        <label htmlFor='title'>Title: </label>
+        <input
+          id='title'
+          value={title}
+          onChange={handleTitleChange}
+        />
+        <br />
+        <label htmlFor='author'>Author: </label>
+        <input
+          id='author'
+          value={author}
+          onChange={handleAuthorChange}
+        />
+        <br />
+        <label htmlFor='url'>Url: </label>
+        <input
+          id='url'
+          value={url}
+          onChange={handleUrlChange}
+        />
+        <br />
+        <button type='submit'>create</button>
+      </form>
+      <div>
+        {blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+          />
+        ))}
+      </div>
+    </>
+  )
 
   return (
     <div>
