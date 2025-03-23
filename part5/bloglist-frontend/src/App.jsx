@@ -124,6 +124,7 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
+            name={user.name}
           />
         ))}
       </div>
