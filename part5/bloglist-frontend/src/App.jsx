@@ -67,13 +67,21 @@ const App = () => {
   }
 
   const addBlog = async (blogObj) => {
-    blogFormRef.current.setVisibility
+    if (!blogObj.title || !blogObj.author || !blogObj.url) {
+      return notify('Check for empty fields', true)
+    }
 
-    const returnedBlog = await blogService.create(blogObj)
-    setBlogs(blogs.concat(returnedBlog))
-    notify(
-      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-    )
+    blogFormRef.current.toggleVisibility()
+
+    try {
+      const returnedBlog = await blogService.create(blogObj)
+      setBlogs(blogs.concat(returnedBlog))
+      notify(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      )
+    } catch (error) {
+      notify(`${error}`, true)
+    }
   }
 
   const clearLoginForm = () => {

@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
 const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
@@ -64,7 +62,7 @@ blogsRouter.delete(
 )
 
 blogsRouter.put('/:id', async (req, res) => {
-  const { title, author, url, likes } = req.body
+  const { title, author, url, likes, user } = req.body
 
   const blog = await Blog.findById(req.params.id)
 
@@ -76,6 +74,7 @@ blogsRouter.put('/:id', async (req, res) => {
   blog.author = author
   blog.url = url
   blog.likes = likes
+  blog.user = req.user
 
   const updatedBlog = await blog.save()
   return res.json(updatedBlog)
