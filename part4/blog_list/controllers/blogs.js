@@ -74,7 +74,7 @@ blogsRouter.put('/:id', async (req, res) => {
   blog.author = author
   blog.url = url
   blog.likes = likes
-  blog.user = req.user
+  blog.user = user
 
   const updatedBlog = await blog.save()
   return res.json(updatedBlog)

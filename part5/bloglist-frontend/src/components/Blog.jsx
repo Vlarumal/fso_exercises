@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, name }) => {
+const Blog = ({ blog, user, removeBlog, updateLikes }) => {
   const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
 
   const blogStyle = {
     paddingTop: 10,
@@ -19,20 +17,6 @@ const Blog = ({ blog, name }) => {
     setVisible(!visible)
   }
 
-  const handleLikes = async (id, blogToUpdate) => {
-    try {
-      setLikes(likes + 1)
-      
-      await blogService.update(id, {
-        ...blogToUpdate,
-        likes: blogToUpdate.likes + 1,
-      })
-    } catch (error) {
-      console.error('Failed to update likes:', error)
-      setLikes(likes - 1)
-    }
-  }
-
   return (
     <div style={blogStyle}>
       <div>
@@ -42,13 +26,25 @@ const Blog = ({ blog, name }) => {
         </button>
       </div>
       <div style={showWhenVisible}>
-        {blog.url} <br />
-        likes {likes}{' '}
-        <button onClick={() => handleLikes(blog.id, blog)}>
+        {blog.url}
+        <br />
+        likes {blog.likes}{' '}
+        <button onClick={() => updateLikes(blog.id, blog)}>
           like
         </button>{' '}
         <br />
-        {name}
+        {blog.user
+          ? blog.user.name
+          : 'User for this blog doesn`t exist'}
+        <br />
+        {blog.user && blog.user.username === user.username && (
+          <button
+            style={{ backgroundColor: 'red'}}
+            onClick={() => removeBlog(blog)}
+          >
+            remove
+          </button>
+        )}
       </div>
     </div>
   )

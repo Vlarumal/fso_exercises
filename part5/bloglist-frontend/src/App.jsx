@@ -13,13 +13,14 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ message: null })
+  const [likes, setLikes] = useState(0)
 
   const blogFormRef = useRef()
   const loginFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(
@@ -96,6 +97,34 @@ const App = () => {
     }, 5000)
   }
 
+  const handleLikes = async (id, blogToUpdate) => {
+    try {
+      const updatedBlog = await blogService.update(id, {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1,
+        user: blogToUpdate.user.id
+          ? blogToUpdate.user.id
+          : blogToUpdate.user,
+      })
+      setLikes(updatedBlog.likes)
+    } catch (error) {
+    }
+  }
+
+  const handleDelete = (blog) => {
+    if (
+      window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+    ) {
+      if (blog.user.username === user.username) {
+        blogService.remove(blog.id)
+        const blogsAfterDelete = blogs.filter((b) => b.id !== blog.id)
+        setBlogs(blogsAfterDelete)
+      } else {
+        notify(`You can't delete other users' blogs`, true)
+      }
+    }
+  }
+
   const loginForm = () => (
     <>
       <h2>Log in to application</h2>
@@ -134,7 +163,9 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              name={user.name}
+              user={user}
+              removeBlog={handleDelete}
+              updateLikes={handleLikes}
             />
           ))}
       </div>
