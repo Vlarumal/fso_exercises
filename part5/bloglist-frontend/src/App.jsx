@@ -98,16 +98,21 @@ const App = () => {
   }
 
   const handleLikes = async (id, blogToUpdate) => {
+    const user = blogToUpdate.user
+      ? blogToUpdate.user.id
+        ? blogToUpdate.user.id
+        : blogToUpdate.user
+      : null
+
     try {
       const updatedBlog = await blogService.update(id, {
         ...blogToUpdate,
         likes: blogToUpdate.likes + 1,
-        user: blogToUpdate.user.id
-          ? blogToUpdate.user.id
-          : blogToUpdate.user,
+        user: user,
       })
       setLikes(updatedBlog.likes)
     } catch (error) {
+      notify(`Error while trying to update likes: ${error}`, error)
     }
   }
 
@@ -120,7 +125,7 @@ const App = () => {
         const blogsAfterDelete = blogs.filter((b) => b.id !== blog.id)
         setBlogs(blogsAfterDelete)
       } else {
-        notify(`You can't delete other users' blogs`, true)
+        notify("You can't delete other users' blogs", true)
       }
     }
   }

@@ -39,7 +39,7 @@ const Blog = ({ blog, user, removeBlog, updateLikes }) => {
         <br />
         {blog.user && blog.user.username === user.username && (
           <button
-            style={{ backgroundColor: 'red'}}
+            style={{ backgroundColor: 'red' }}
             onClick={() => removeBlog(blog)}
           >
             remove
