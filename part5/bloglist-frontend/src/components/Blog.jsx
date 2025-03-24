@@ -17,6 +17,11 @@ const Blog = ({ blog, user, removeBlog, updateLikes }) => {
     setVisible(!visible)
   }
 
+  const addLike = (event) => {
+    event.preventDefault()
+    updateLikes(blog.id, blog)
+  }
+
   return (
     <div
       style={blogStyle}
@@ -28,13 +33,13 @@ const Blog = ({ blog, user, removeBlog, updateLikes }) => {
           {visible ? 'hide' : 'view'}
         </button>
       </div>
-      <div style={showWhenVisible} className='togglableContent'>
+      <div
+        style={showWhenVisible}
+        className='togglableContent'
+      >
         {blog.url}
         <br />
-        likes {blog.likes}{' '}
-        <button onClick={() => updateLikes(blog.id, blog)}>
-          like
-        </button>{' '}
+        likes {blog.likes} <button onClick={addLike} className='likeButton'>like</button>{' '}
         <br />
         {blog.user
           ? blog.user.name
