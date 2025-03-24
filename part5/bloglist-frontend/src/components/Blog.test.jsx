@@ -19,7 +19,7 @@ describe('<Blog />', () => {
       </Blog>
     ).container
   })
-  
+
   test("renders the blog's title and author, but does not render its URL or number of likes by default", () => {
     const title = screen.getByText('test blog', { exact: false })
     expect(title).toBeDefined()
