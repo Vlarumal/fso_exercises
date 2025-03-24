@@ -15,15 +15,11 @@ describe('<Blog />', () => {
   beforeEach(() => {
     container = render(
       <Blog blog={blog}>
-        <div className='testDiv'>
-          blog info
-        </div>
+        <div className='testDiv'>blog info</div>
       </Blog>
     ).container
   })
   test("renders the blog's title and author, but does not render its URL or number of likes by default", () => {
-    // screen.debug()
-
     const title = screen.getByText('test blog', { exact: false })
     expect(title).toBeDefined()
 
@@ -32,5 +28,14 @@ describe('<Blog />', () => {
 
     const div = container.querySelector('.togglableContent')
     expect(div).toHaveStyle('display: none')
+  })
+
+  test('after clicking button, url and likes are shown', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const div = container.querySelector('.togglableContent')
+    expect(div).not.toHaveStyle('display: none')
   })
 })
