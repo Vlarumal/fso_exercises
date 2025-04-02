@@ -32,8 +32,13 @@
     },
     {
       "content": "test anecdote",
-      "votes": 1,
+      "votes": 6,
       "id": "g5wCtrS"
+    },
+    {
+      "content": "context test",
+      "votes": 5,
+      "id": "EeSmsCd"
     }
   ]
 }
