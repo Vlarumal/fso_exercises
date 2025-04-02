@@ -7,11 +7,17 @@ const AnecdoteForm = () => {
 
   const queryClient = useQueryClient()
 
-  const nweAnecdoteMutation = useMutation({
+  const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['anecdotes'],
+      })
+    },
+    onError: (error) => {
+      dispatch({
+        type: 'ERROR',
+        payload: error.response.data.error,
       })
     },
   })
@@ -20,7 +26,7 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    nweAnecdoteMutation.mutate({
+    newAnecdoteMutation.mutate({
       content,
       votes: 0,
     })

@@ -1,6 +1,8 @@
 const notificationReducer = (state, action) => {
   const content = action.payload
   switch (action.type) {
+    case 'ERROR':
+      return content
     case 'NEW_ANECDOTE':
       if (content && content.length >= 5) {
         return `'${content}' added`
