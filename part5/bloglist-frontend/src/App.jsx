@@ -10,20 +10,30 @@ import {
   useNotificationDispatch,
   useNotificationValue,
 } from './NotificationContext'
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [likes, setLikes] = useState(0)
 
+  const notification = useNotificationValue()
+
+  const queryClient = useQueryClient()
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    },
+  })
+
   const blogFormRef = useRef()
   const loginFormRef = useRef()
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(
@@ -78,11 +88,8 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
 
     try {
-      const returnedBlog = await blogService.create(blogObj)
-      setBlogs(blogs.concat(returnedBlog))
-      notify(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-      )
+      newBlogMutation.mutate(blogObj)
+      notify(`a new blog ${blogObj.title} by ${blogObj.author} added`)
     } catch (error) {
       notify(`${error}`, true)
     }
@@ -132,7 +139,6 @@ const App = () => {
       if (blog.user.username === user.username) {
         blogService.remove(blog.id)
         const blogsAfterDelete = blogs.filter((b) => b.id !== blog.id)
-        setBlogs(blogsAfterDelete)
       } else {
         notify("You can't delete other users' blogs", true)
       }
@@ -162,6 +168,17 @@ const App = () => {
     </>
   )
 
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  })
+
+  if (result.isLoading) {
+    return <div>loading data...</div>
+  }
+
+  const blogs = result.data
+
   const blogForm = () => (
     <>
       <Togglable
@@ -185,8 +202,6 @@ const App = () => {
       </div>
     </>
   )
-
-  const notification = useNotificationValue()
 
   return (
     <div>
