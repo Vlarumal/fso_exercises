@@ -15,13 +15,16 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const notification = useNotificationValue()
+
+  const loggedUser = useLoggedValue()
+  const loggedDispatch = useLoggedDispatch()
 
   const queryClient = useQueryClient()
   const newBlogMutation = useMutation({
@@ -54,7 +57,7 @@ const App = () => {
     )
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      loggedDispatch({ type: 'SET_USER', user })
       blogService.setToken(user.token)
     }
   }, [])
@@ -72,7 +75,7 @@ const App = () => {
         JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
+      loggedDispatch({ type: 'SET_USER', user })
       clearLoginForm()
     } catch (exception) {
       console.error('Wrong username or password', exception)
@@ -85,7 +88,7 @@ const App = () => {
 
     try {
       window.localStorage.removeItem('loggedBloglistappUser')
-      setUser(null)
+      loggedDispatch({ type: 'LOGOUT' })
       clearLoginForm()
     } catch (exception) {
       console.error('Something went wrong', exception)
@@ -113,15 +116,15 @@ const App = () => {
     setPassword('')
   }
 
-  const dispatch = useNotificationDispatch()
+  const notificationDispatch = useNotificationDispatch()
   const notify = (message, isError = false) => {
-    dispatch({
+    notificationDispatch({
       type: 'SET_NOTIFICATION',
       message,
       isError,
     })
     setTimeout(() => {
-      dispatch({ type: 'CLEAR_NOTIFICATION' })
+      notificationDispatch({ type: 'CLEAR_NOTIFICATION' })
     }, 5000)
   }
 
@@ -138,7 +141,7 @@ const App = () => {
         likes: blogToUpdate.likes + 1,
         user: user,
       })
-      notify(`${blogToUpdate.title} liked`)
+      notify(`Blog ${blogToUpdate.title} liked`)
     } catch (error) {
       notify(`Error while trying to update likes: ${error}`, error)
     }
@@ -148,7 +151,7 @@ const App = () => {
     if (
       window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
     ) {
-      if (blog.user.username === user.username) {
+      if (blog.user.username === loggedUser.username) {
         notify(`Blog ${blog.title} has been deleted`)
         deleteBlogMutation.mutate(blog.id)
       } else {
@@ -206,7 +209,7 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              user={user}
+              user={loggedUser}
               removeBlog={handleDelete}
               updateLikes={handleLikes}
             />
@@ -217,14 +220,14 @@ const App = () => {
 
   return (
     <div>
-      {user === null ? (
+      {loggedUser === null ? (
         loginForm()
       ) : (
         <div>
           <h2>blogs</h2>
           <Notification notification={notification} />
           <p>
-            {user.name} logged-in{' '}
+            {loggedUser.name} logged-in{' '}
             <button
               type='button'
               onClick={handleLogout}
