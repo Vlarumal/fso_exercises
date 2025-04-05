@@ -6,13 +6,16 @@ import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import {
+  useNotificationDispatch,
+  useNotificationValue,
+} from './NotificationContext'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({ message: null })
   const [likes, setLikes] = useState(0)
 
   const blogFormRef = useRef()
@@ -90,10 +93,15 @@ const App = () => {
     setPassword('')
   }
 
+  const dispatch = useNotificationDispatch()
   const notify = (message, isError = false) => {
-    setNotification({ message, isError })
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      message,
+      isError,
+    })
     setTimeout(() => {
-      setNotification({ message: null })
+      dispatch({ type: 'CLEAR_NOTIFICATION' })
     }, 5000)
   }
 
@@ -111,6 +119,7 @@ const App = () => {
         user: user,
       })
       setLikes(updatedBlog.likes)
+      notify(`${updatedBlog.title} liked`)
     } catch (error) {
       notify(`Error while trying to update likes: ${error}`, error)
     }
@@ -176,6 +185,8 @@ const App = () => {
       </div>
     </>
   )
+
+  const notification = useNotificationValue()
 
   return (
     <div>
