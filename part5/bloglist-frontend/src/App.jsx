@@ -20,13 +20,26 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [likes, setLikes] = useState(0)
 
   const notification = useNotificationValue()
 
   const queryClient = useQueryClient()
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    },
+  })
+
+  const updateBlogMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.remove,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogs'] })
     },
@@ -120,13 +133,12 @@ const App = () => {
       : null
 
     try {
-      const updatedBlog = await blogService.update(id, {
+      updateBlogMutation.mutate({
         ...blogToUpdate,
         likes: blogToUpdate.likes + 1,
         user: user,
       })
-      setLikes(updatedBlog.likes)
-      notify(`${updatedBlog.title} liked`)
+      notify(`${blogToUpdate.title} liked`)
     } catch (error) {
       notify(`Error while trying to update likes: ${error}`, error)
     }
@@ -137,8 +149,8 @@ const App = () => {
       window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
     ) {
       if (blog.user.username === user.username) {
-        blogService.remove(blog.id)
-        const blogsAfterDelete = blogs.filter((b) => b.id !== blog.id)
+        notify(`Blog ${blog.title} has been deleted`)
+        deleteBlogMutation.mutate(blog.id)
       } else {
         notify("You can't delete other users' blogs", true)
       }

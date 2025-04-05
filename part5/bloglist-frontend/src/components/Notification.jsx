@@ -11,6 +11,9 @@ const Notification = ({ notification }) => {
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
   }
 
   return (
