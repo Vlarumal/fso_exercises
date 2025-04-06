@@ -18,7 +18,7 @@ import {
 import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
 import Users from './components/Users'
 import User from './components/User'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -149,6 +149,7 @@ const App = () => {
     }
   }
 
+  const navigate = useNavigate()
   const handleDelete = (blog) => {
     if (
       window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
@@ -156,6 +157,7 @@ const App = () => {
       if (blog.user.username === loggedUser.username) {
         notify(`Blog ${blog.title} has been deleted`)
         deleteBlogMutation.mutate(blog.id)
+        navigate('/blogs')
       } else {
         notify("You can't delete other users' blogs", true)
       }
@@ -208,13 +210,21 @@ const App = () => {
         {blogs
           .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
-            <Blog
+            <div
+              style={{
+                paddingTop: 10,
+                paddingLeft: 2,
+                marginBottom: 5,
+                borderStyle: 'solid',
+                borderWidth: 1,
+              }}
+              className='blogMainInfo'
               key={blog.id}
-              blog={blog}
-              user={loggedUser}
-              removeBlog={handleDelete}
-              updateLikes={handleLikes}
-            />
+            >
+              <Link to={`${blog.id}`}>
+                {blog.title} {blog.author}{' '}
+              </Link>
+            </div>
           ))}
       </div>
     </>
@@ -226,21 +236,29 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <header>
-            {loggedUser.name} logged-in{' '}
-            <button
-              type='button'
-              onClick={handleLogout}
-            >
-              logout
-            </button>
-          </header>
-          <div>
+          <header
+            style={{
+              backgroundColor: 'lightgrey',
+            }}
+          >
             <Link to='/'>home </Link>
             <Link to='/blogs'>blogs </Link>
             <Link to='/users'>users</Link>
-          </div>
-
+            <span>
+              {' '}
+              {loggedUser.name} logged-in
+              <button
+                style={{
+                  marginLeft: 5,
+                }}
+                type='button'
+                onClick={handleLogout}
+              >
+                logout
+              </button>
+            </span>
+          </header>
+          <Notification notification={notification} />
           <Routes>
             <Route
               path='/users/:id'
@@ -251,12 +269,20 @@ const App = () => {
               element={<Users />}
             />
             <Route
+              path='/blogs/:id'
+              element={
+                <Blog
+                  blogs={blogs}
+                  removeBlog={handleDelete}
+                  updateLikes={handleLikes}
+                />
+              }
+            />
+            <Route
               path='/blogs'
               element={
                 <div>
                   <h2>blogs</h2>
-                  <Notification notification={notification} />
-
                   {blogForm()}
                 </div>
               }
