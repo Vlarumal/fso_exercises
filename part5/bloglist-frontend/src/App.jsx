@@ -16,6 +16,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
+import Users from './components/Users'
+import { Link, Route, Routes } from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -224,9 +226,7 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <h2>blogs</h2>
-          <Notification notification={notification} />
-          <p>
+          <header>
             {loggedUser.name} logged-in{' '}
             <button
               type='button'
@@ -234,8 +234,34 @@ const App = () => {
             >
               logout
             </button>
-          </p>
-          {blogForm()}
+          </header>
+          <div>
+            <Link to='/'>home </Link>
+            <Link to='/blogs'>blogs </Link>
+            <Link to='/users'>users</Link>
+          </div>
+
+          <Routes>
+            <Route
+              path='/users'
+              element={<Users />}
+            />
+            <Route
+              path='/blogs'
+              element={
+                <div>
+                  <h2>blogs</h2>
+                  <Notification notification={notification} />
+
+                  {blogForm()}
+                </div>
+              }
+            />
+            <Route
+              path='/'
+              element={<h2>Blog app</h2>}
+            />
+          </Routes>
         </div>
       )}
     </div>

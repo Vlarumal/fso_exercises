@@ -6,6 +6,8 @@ const notificationReducer = (state, action) => {
       return { message: action.message, isError: action.isError }
     case 'CLEAR_NOTIFICATION':
       return { message: null }
+    case 'ERROR_GETTING_USER':
+      return { message: action.message, isError: action.isError }
   }
 }
 
