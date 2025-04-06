@@ -1,30 +1,9 @@
-import axios from 'axios'
-import { useNotificationDispatch } from '../NotificationContext'
-import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { UsersContext } from '../UsersContext'
+import { useContext } from 'react'
 
 const Users = () => {
-  const [users, setUsers] = useState([])
-
-  const dispatch = useNotificationDispatch()
-
-  useEffect(() => {
-    const usersUrl = 'http://localhost:3003/api/users'
-    const getUsers = async () => {
-      try {
-        const response = await axios.get(usersUrl)
-        setUsers(response.data)
-      } catch (error) {
-        dispatch({
-          type: 'ERROR_GETTING_USERS',
-          message: error,
-          isError: true,
-        })
-      }
-    }
-
-    getUsers()
-  }, [])
-
+  const users = useContext(UsersContext)
   return (
     <div>
       <h2>Users</h2>
@@ -38,7 +17,9 @@ const Users = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
@@ -47,5 +28,7 @@ const Users = () => {
     </div>
   )
 }
+
+Users.displayName = 'Users'
 
 export default Users

@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 import { LoggedContextProvider } from './LoggedContext'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { UsersContextProvider } from './UsersContext'
 
 const queryClient = new QueryClient()
 
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Router>
       <QueryClientProvider client={queryClient}>
         <NotificationContextProvider>
-          <App />
+          <UsersContextProvider>
+            <App />
+          </UsersContextProvider>
         </NotificationContextProvider>
       </QueryClientProvider>
     </Router>

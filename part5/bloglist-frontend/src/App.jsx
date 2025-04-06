@@ -17,6 +17,7 @@ import {
 } from '@tanstack/react-query'
 import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
 import Users from './components/Users'
+import User from './components/User'
 import { Link, Route, Routes } from 'react-router-dom'
 
 const App = () => {
@@ -29,25 +30,24 @@ const App = () => {
   const loggedDispatch = useLoggedDispatch()
 
   const queryClient = useQueryClient()
+
+  const handleMutationSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['blogs'] })
+  }
+
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blogs'] })
-    },
+    onSuccess: () => handleMutationSuccess(),
   })
 
   const updateBlogMutation = useMutation({
     mutationFn: blogService.update,
-    onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
-    },
+    onSuccess: () => handleMutationSuccess(),
   })
 
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.remove,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blogs'] })
-    },
+    onSuccess: () => handleMutationSuccess(),
   })
 
   const blogFormRef = useRef()
@@ -242,6 +242,10 @@ const App = () => {
           </div>
 
           <Routes>
+            <Route
+              path='/users/:id'
+              element={<User />}
+            />
             <Route
               path='/users'
               element={<Users />}
