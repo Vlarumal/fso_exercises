@@ -19,7 +19,7 @@ import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
 import Users from './components/Users'
 import User from './components/User'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
-import { Button, Nav, Navbar } from 'react-bootstrap'
+import { Button, Container, ListGroup, Nav, Navbar } from 'react-bootstrap'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -166,7 +166,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <>
+    <Container>
       <h2>Log in to application</h2>
       <Notification notification={notification} />
       <Togglable
@@ -185,7 +185,7 @@ const App = () => {
           handleSubmit={handleLogin}
         />
       </Togglable>
-    </>
+    </Container>
   )
 
   const result = useQuery({
@@ -207,11 +207,11 @@ const App = () => {
       >
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      <div>
+      <ListGroup>
         {blogs
           .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
-            <div
+            <ListGroup.Item
               style={{
                 paddingTop: 10,
                 paddingLeft: 2,
@@ -225,9 +225,9 @@ const App = () => {
               <Link to={`${blog.id}`}>
                 {blog.title} {blog.author}{' '}
               </Link>
-            </div>
+            </ListGroup.Item>
           ))}
-      </div>
+      </ListGroup>
     </>
   )
 

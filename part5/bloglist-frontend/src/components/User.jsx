@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { UsersContext } from '../UsersContext'
+import { Card, ListGroup } from 'react-bootstrap'
 
 const User = () => {
   const users = useContext(UsersContext)
@@ -20,15 +21,17 @@ const User = () => {
   if (!user) return <div>No info...</div>
 
   return (
-    <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
-        {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
-    </div>
+    <Card>
+      <Card.Body>
+        <Card.Title as='h2'>{user.name}</Card.Title>
+        <Card.Subtitle as='h3'>added blogs</Card.Subtitle>
+        <ListGroup>
+          {user.blogs.map((blog) => (
+            <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Card.Body>
+    </Card>
   )
 }
 

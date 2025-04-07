@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Button, Card, Form } from 'react-bootstrap'
 
 const LoginForm = ({
   handleSubmit,
@@ -8,31 +9,33 @@ const LoginForm = ({
   password,
 }) => {
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          username
-          <input
-            data-testid='username'
-            type='text'
-            value={username}
-            name='Username'
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
-          password
-          <input
-            data-testid='password'
-            type='password'
-            value={password}
-            name='Password'
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button type='submit'>login</button>
-      </form>
-    </>
+    <Card>
+      <Card.Body>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label>username</Form.Label>
+            <Form.Control
+              data-testid='username'
+              type='text'
+              value={username}
+              name='Username'
+              onChange={handleUsernameChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>password</Form.Label>
+            <Form.Control
+              data-testid='password'
+              type='password'
+              value={password}
+              name='Password'
+              onChange={handlePasswordChange}
+            />
+          </Form.Group>
+          <Button type='submit'>login</Button>
+        </Form>
+      </Card.Body>
+    </Card>
   )
 }
 

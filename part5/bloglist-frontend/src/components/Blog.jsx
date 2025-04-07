@@ -1,14 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import Togglable from './Togglable'
 import CommentForm from './CommentForm'
+import { Badge, Button, Card, ListGroup } from 'react-bootstrap'
 
 const Blog = ({ blogs, removeBlog, updateLikes }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    marginBottom: 5,
-  }
-
   const { id } = useParams()
   const blog = blogs.find((b) => b.id === id)
   const user = JSON.parse(
@@ -22,53 +17,55 @@ const Blog = ({ blogs, removeBlog, updateLikes }) => {
 
   const navigate = useNavigate()
   return (
-    <div
-      style={blogStyle}
-      className='blog'
-    >
+    <Card>
       <div className='togglableContent'>
         <h2>
           {blog.title} {blog.author}{' '}
         </h2>
         <div>
-          <button onClick={() => navigate('/blogs')}>Back</button>
+          <Button
+            variant='secondary'
+            onClick={() => navigate('/blogs')}
+          >
+            Back to Blogs
+          </Button>
         </div>
-        <div>{blog.url}</div>
+        <Card.Text>URL: {blog.url}</Card.Text>
         <div>
-          likes {blog.likes}
-          <button
-            style={{ marginLeft: 5 }}
+          <Badge className='me-2'>likes {blog.likes}</Badge>
+          <Button
             onClick={addLike}
             className='likeButton'
+            variant='success'
           >
-            like
-          </button>{' '}
+            👍 Like
+          </Button>{' '}
         </div>
         {blog.user
           ? blog.user.name
           : 'User for this blog doesn`t exist'}
         <br />
         {blog.user && blog.user.username === user.username && (
-          <button
-            style={{ backgroundColor: 'red' }}
+          <Button
+            variant='danger'
             onClick={() => removeBlog(blog)}
           >
-            remove
-          </button>
+            🗑️ remove
+          </Button>
         )}
       </div>
       <div>
         <h3>comments</h3>
-        <Togglable buttonLabel='add comment'>
+        <Togglable buttonLabel='💬 add comment'>
           <CommentForm id={id} />
         </Togglable>
-        <ul>
+        <ListGroup>
           {blog.comments.map((comment) => (
-            <li key={comment._id}>{comment.text}</li>
+            <ListGroup.Item key={comment._id}>💬 {comment.text}</ListGroup.Item>
           ))}
-        </ul>
+        </ListGroup>
       </div>
-    </div>
+    </Card>
   )
 }
 
