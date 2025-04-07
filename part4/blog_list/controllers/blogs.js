@@ -80,4 +80,32 @@ blogsRouter.put('/:id', async (req, res) => {
   return res.json(updatedBlog)
 })
 
+blogsRouter.post(
+  '/:id/comments',
+  middleware.userExtractor,
+  async (req, res) => {
+    try {
+      const blogId = req.params.id
+      const blog = await Blog.findById(blogId)
+      const comment = { text: req.body.text }
+
+      const user = req.user
+
+      if (!user) {
+        return res.status(400).send('There are no users in the DB')
+      }
+
+      blog.comments.push(comment)
+
+      const result = await blog.save()
+      await user.save()
+
+      res.status(201).json(result)
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: 'Failed to add comment' })
+    }
+  }
+)
+
 module.exports = blogsRouter

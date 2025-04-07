@@ -9,6 +9,16 @@ const blogSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+  comments: [
+    {
+      text: String,
+      // Should be anonymous for now
+      // user: {
+      //   type: Schema.Types.ObjectId,
+      //   ref: 'User',
+      // },
+    },
+  ],
 })
 
 blogSchema.set('toJSON', {
