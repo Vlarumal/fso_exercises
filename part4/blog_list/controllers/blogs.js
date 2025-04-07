@@ -100,7 +100,7 @@ blogsRouter.post(
       const result = await blog.save()
       await user.save()
 
-      res.status(201).json(result)
+      return res.status(201).json(result)
     } catch (error) {
       console.error(error)
       res.status(500).json({ error: 'Failed to add comment' })

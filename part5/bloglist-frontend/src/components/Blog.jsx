@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
+import Togglable from './Togglable'
+import CommentForm from './CommentForm'
 
 const Blog = ({ blogs, removeBlog, updateLikes }) => {
   const blogStyle = {
@@ -57,6 +59,9 @@ const Blog = ({ blogs, removeBlog, updateLikes }) => {
       </div>
       <div>
         <h3>comments</h3>
+        <Togglable buttonLabel='add comment'>
+          <CommentForm id={id} />
+        </Togglable>
         <ul>
           {blog.comments.map((comment) => (
             <li key={comment._id}>{comment.text}</li>

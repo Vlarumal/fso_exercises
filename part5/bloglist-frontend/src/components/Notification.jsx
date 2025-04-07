@@ -1,28 +1,17 @@
+import { Alert } from 'react-bootstrap'
+
 const Notification = ({ notification }) => {
   const { message, isError } = notification
 
   if (!message) return null
 
-  const msgStyle = {
-    color: isError ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-  }
-
   return (
-    <div
-      className='notification'
-      style={msgStyle}
+    <Alert
+      className='sticky-top'
+      variant={isError ? 'danger' : 'success'}
     >
       {message}
-    </div>
+    </Alert>
   )
 }
 

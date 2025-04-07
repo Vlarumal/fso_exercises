@@ -43,4 +43,28 @@ const remove = async (id) => {
   }
 }
 
-export default { getAll, create, update, remove, setToken }
+export const addComment = async ([id, commentObj]) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  try {
+    const response = await axios.post(
+      `${baseUrl}/${id}/comments`,
+      commentObj,
+      config
+    )
+    return response.data
+  } catch (exception) {
+    console.log('exception:', exception)
+  }
+}
+
+export default {
+  getAll,
+  create,
+  update,
+  remove,
+  setToken,
+  addComment,
+}

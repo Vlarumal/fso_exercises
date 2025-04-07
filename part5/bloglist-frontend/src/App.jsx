@@ -19,6 +19,7 @@ import { useLoggedDispatch, useLoggedValue } from './LoggedContext'
 import Users from './components/Users'
 import User from './components/User'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import { Button, Nav, Navbar } from 'react-bootstrap'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -231,33 +232,51 @@ const App = () => {
   )
 
   return (
-    <div>
+    <div className='container'>
       {loggedUser === null ? (
         loginForm()
       ) : (
         <div>
-          <header
-            style={{
-              backgroundColor: 'lightgrey',
-            }}
+          <Navbar
+            collapseOnSelect
+            bg='light'
+            expand='lg'
           >
-            <Link to='/'>home </Link>
-            <Link to='/blogs'>blogs </Link>
-            <Link to='/users'>users</Link>
-            <span>
-              {' '}
-              {loggedUser.name} logged-in
-              <button
-                style={{
-                  marginLeft: 5,
-                }}
-                type='button'
-                onClick={handleLogout}
-              >
-                logout
-              </button>
-            </span>
-          </header>
+            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Collapse id='responsive-navbar-nav'>
+              <Nav className='me-auto'>
+                <Nav.Link
+                  href='#'
+                  as='span'
+                >
+                  <Link to='/'>home </Link>
+                </Nav.Link>
+                <Nav.Link
+                  href='#'
+                  as='span'
+                >
+                  <Link to='/blogs'>blogs </Link>
+                </Nav.Link>
+                <Nav.Link
+                  href='#'
+                  as='span'
+                >
+                  <Link to='/users'>users</Link>
+                </Nav.Link>
+              </Nav>
+              <Navbar.Text>
+                {' '}
+                {loggedUser.name} logged-in{' '}
+                <Button
+                  size='sm'
+                  onClick={handleLogout}
+                  className='ms-2'
+                >
+                  logout
+                </Button>
+              </Navbar.Text>
+            </Navbar.Collapse>
+          </Navbar>
           <Notification notification={notification} />
           <Routes>
             <Route
