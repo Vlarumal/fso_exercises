@@ -1,3 +1,5 @@
+import { isNotNumber } from './utils';
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -8,13 +10,38 @@ interface Result {
   average: number;
 }
 
+interface CorrectValues {
+  exerciseHours: number[];
+  targetAmount: number;
+}
+
+const getArguments = (args: string[]): CorrectValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+
+  let argsAfterCheck: number[] = [];
+  args.slice(2).forEach((arg) => {
+    if (!isNotNumber(arg)) {
+      argsAfterCheck.push(Number(arg));
+    }
+  });
+
+  if (args.length - 2 === argsAfterCheck.length) {
+    return {
+      targetAmount: argsAfterCheck[0],
+      exerciseHours: argsAfterCheck.slice(1),
+    };
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+};
+
 const calculateExercises = (
   exerciseHours: number[],
   targetAmount: number
 ): Result => {
   try {
     if (!exerciseHours || exerciseHours.length === 0) {
-      throw new Error("Exercice hours can't be empty.");
+      throw new Error("Exercise hours can't be empty.");
     }
 
     const periodLength = exerciseHours.length;
@@ -60,9 +87,20 @@ const calculateExercises = (
   }
 };
 
-const exerciseHours = [3, 0, 2, 4.5, 0, 3, 1];
-const targetAmount = 2;
-const result = calculateExercises(exerciseHours, targetAmount);
-if (result) {
-  console.log(result);
+// const exerciseHours = [3, 0, 2, 4.5, 0, 3, 1];
+// const targetAmount = 2;
+// const result = calculateExercises(exerciseHours, targetAmount);
+// if (result) {
+//   console.log(result);
+// }
+
+try {
+  const { targetAmount, exerciseHours } = getArguments(process.argv);
+  console.log(calculateExercises(exerciseHours, targetAmount));
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.error(errorMessage);
 }
