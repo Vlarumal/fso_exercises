@@ -18,7 +18,7 @@ interface CorrectValues {
 const getArguments = (args: string[]): CorrectValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
 
-  let argsAfterCheck: number[] = [];
+  const argsAfterCheck: number[] = [];
   args.slice(2).forEach((arg) => {
     if (!isNotNumber(arg)) {
       argsAfterCheck.push(Number(arg));
@@ -38,7 +38,7 @@ const getArguments = (args: string[]): CorrectValues => {
 const calculateExercises = (
   exerciseHours: number[],
   targetAmount: number
-): Result => {
+): Result | undefined => {
   try {
     if (!exerciseHours || exerciseHours.length === 0) {
       throw new Error("Exercise hours can't be empty.");
