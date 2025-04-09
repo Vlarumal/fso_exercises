@@ -1,7 +1,11 @@
 import express from 'express';
 import { calculateBmi } from './bmiCalculator';
+import { calculateExercises } from './exerciseCalculator';
+import { isNotNumber } from './utils';
 
 const app = express();
+
+app.use(express.json());
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!');
@@ -40,8 +44,45 @@ app.get('/bmi', (req, res) => {
       bmi,
     });
     return;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(400).json({ error: 'malformatted parameters' });
+    return;
+  }
+});
+
+app.post('/exercises', (req, res) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { daily_exercises, target } = req.body;
+
+    if (!daily_exercises || !target) {
+      res.status(400).json({
+        error: 'parameters missing',
+      });
+      return;
+    }
+
+    const isArrayOfNumbers = (array: unknown[]): boolean => {
+      return (
+        Array.isArray(array) &&
+        array.every((element) => !isNotNumber(element))
+      );
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    if (isNotNumber(target) || !isArrayOfNumbers(daily_exercises)) {
+      res.status(400).json({ error: 'malformatted parameters' });
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const result = calculateExercises(daily_exercises, target);
+
+    res.send({ result });
+    return;
+  } catch (error) {
+    res.status(400).json(error);
     return;
   }
 });

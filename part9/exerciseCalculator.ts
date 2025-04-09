@@ -35,7 +35,7 @@ const getArguments = (args: string[]): CorrectValues => {
   }
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   exerciseHours: number[],
   targetAmount: number
 ): Result | undefined => {
@@ -94,13 +94,17 @@ const calculateExercises = (
 //   console.log(result);
 // }
 
-try {
-  const { targetAmount, exerciseHours } = getArguments(process.argv);
-  console.log(calculateExercises(exerciseHours, targetAmount));
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.';
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { targetAmount, exerciseHours } = getArguments(
+      process.argv
+    );
+    console.log(calculateExercises(exerciseHours, targetAmount));
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.';
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.error(errorMessage);
   }
-  console.error(errorMessage);
 }
