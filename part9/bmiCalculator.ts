@@ -1,11 +1,11 @@
 import { isNotNumber } from './utils';
 
-interface numberValues {
+interface NumberValues {
   height: number;
   weight: number;
 }
 
-const parseArguments = (args: string[]): numberValues => {
+const parseArguments = (args: string[]): NumberValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
 
@@ -19,7 +19,10 @@ const parseArguments = (args: string[]): numberValues => {
   }
 };
 
-const calculateBmi = (height: number, weight: number) => {
+export const calculateBmi = (
+  height: number,
+  weight: number
+): string => {
   const heightInMeters = height / 100;
   const bmi = weight / heightInMeters ** 2;
 
@@ -31,16 +34,20 @@ const calculateBmi = (height: number, weight: number) => {
     return 'Overweight';
   } else if (bmi >= 30) {
     return 'Obese';
+  } else {
+    return 'Something is wrong';
   }
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.';
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.';
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.error(errorMessage);
   }
-  console.error(errorMessage);
 }
