@@ -2,7 +2,7 @@ import patients from '../../data/patients';
 import { v1 as uuid } from 'uuid';
 
 import {
-  newPatientEntry,
+  NewPatientEntry,
   NonSensitivePatientEntry,
   PatientEntry,
 } from '../types';
@@ -23,7 +23,7 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   );
 };
 
-const addPatient = (entry: newPatientEntry): PatientEntry => {
+const addPatient = (entry: NewPatientEntry): PatientEntry => {
   const id: string = uuid();
   const newPatientEntry = {
     id,
