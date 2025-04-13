@@ -1,19 +1,14 @@
-interface ContentPart {
-  name: string;
-  exerciseCount: number;
-}
-
-interface ContentProps {
-  parts: ContentPart[];
-}
+import { ContentProps } from '../types';
+import Part from './Part';
 
 const Content = (props: ContentProps) => {
   return (
     <div>
       {props.parts.map((part) => (
-        <p key={`${part.name}-${part.exerciseCount}`}>
-          {part.name} {part.exerciseCount}
-        </p>
+        <Part
+          key={`${part.name}-${part.exerciseCount}`}
+          part={part}
+        />
       ))}
     </div>
   );
