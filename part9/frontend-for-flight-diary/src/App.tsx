@@ -9,6 +9,7 @@ import {
   createDiaryEntry,
   getAllDiaryEntries,
 } from './services/diaryService';
+import axios from 'axios';
 
 function App() {
   const [date, setDate] = useState('');
@@ -18,6 +19,9 @@ function App() {
   const [weather, setWeather] = useState<Weather>(Weather.Sunny);
   const [comment, setComment] = useState('');
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     getAllDiaryEntries().then((data) => {
@@ -33,10 +37,29 @@ function App() {
       weather,
       comment,
     };
-    createDiaryEntry(newDiaryEntryToAdd).then((data) => {
-      setDiaryEntries(diaryEntries.concat(data));
-      clearFields();
-    });
+    createDiaryEntry(newDiaryEntryToAdd)
+      .then((data) => {
+        setDiaryEntries(diaryEntries.concat(data));
+        clearFields();
+      })
+      .catch((error: unknown) => {
+        if (axios.isAxiosError(error)) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            const axiosErrorMessages = error.response.data.error;
+            if (Array.isArray(axiosErrorMessages)) {
+              const messages = axiosErrorMessages
+                .map((error) => error.message)
+                .join('; ');
+              setErrorMessage(messages);
+              setTimeout(() => { setErrorMessage(null) }, 7000)
+            }
+          }
+        }
+      });
   };
 
   const clearFields = () => {
@@ -50,6 +73,7 @@ function App() {
     <div>
       <form onSubmit={diaryEntryCreation}>
         <h2>Add new Entry</h2>
+        <div style={{ color: 'red' }}>{errorMessage}</div>
         <label htmlFor='date'>date </label>
         <input
           value={date}
