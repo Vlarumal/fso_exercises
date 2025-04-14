@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DiaryEntry,
   NewDiaryEntry,
@@ -29,14 +29,28 @@ function App() {
     });
   }, []);
 
+  const notify = (message: string, duration: number = 5000) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, duration);
+  };
+
   const diaryEntryCreation = (event: React.SyntheticEvent) => {
     event.preventDefault();
+
+    if (!date || !visibility || !weather) {
+      notify('Please check for empty fields');
+      return;
+    }
+
     const newDiaryEntryToAdd: NewDiaryEntry = {
       date,
       visibility,
       weather,
       comment,
     };
+
     createDiaryEntry(newDiaryEntryToAdd)
       .then((data) => {
         setDiaryEntries(diaryEntries.concat(data));
@@ -54,8 +68,7 @@ function App() {
               const messages = axiosErrorMessages
                 .map((error) => error.message)
                 .join('; ');
-              setErrorMessage(messages);
-              setTimeout(() => { setErrorMessage(null) }, 7000)
+              notify(messages, 7000);
             }
           }
         }
@@ -69,6 +82,26 @@ function App() {
     setComment('');
   };
 
+  const handleVisibilityChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const valueOfVisibility = event.target.value;
+    if (
+      Object.values(Visibility).includes(
+        valueOfVisibility as Visibility
+      )
+    )
+      setVisibility(valueOfVisibility as Visibility);
+  };
+
+  const handleWeatherChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const valueOfWeather = event.target.value;
+    if (Object.values(Weather).includes(valueOfWeather as Weather))
+      setWeather(valueOfWeather as Weather);
+  };
+
   return (
     <div>
       <form onSubmit={diaryEntryCreation}>
@@ -77,32 +110,49 @@ function App() {
         <label htmlFor='date'>date </label>
         <input
           value={date}
+          type='date'
           id='date'
           onChange={(event) => setDate(event.target.value)}
         />
         <br />
-        <label htmlFor='visibility'>visibility </label>
+        <div>
+          Visibility:{' '}
+          {Object.values(Visibility).map((value) => (
+            <span key={value}>
+              <label htmlFor={value}> {value}</label>
+              <input
+                type='radio'
+                id={value}
+                name='visibility'
+                value={value}
+                checked={visibility === value}
+                onChange={handleVisibilityChange}
+              />
+            </span>
+          ))}
+        </div>
+        <div>
+          Weather:{' '}
+          {Object.values(Weather).map((value) => (
+            <span key={value}>
+              <label htmlFor={value}> {value}</label>
+              <input
+                type='radio'
+                id={value}
+                name='weather'
+                value={value}
+                checked={weather === value}
+                onChange={handleWeatherChange}
+              />
+            </span>
+          ))}
+        </div>
+        <label htmlFor='comment'>comment: </label>
         <input
-          value={visibility}
-          id='visibility'
-          onChange={(event) =>
-            setVisibility(event.target.value as Visibility)
-          }
-        />
-        <br />
-        <label htmlFor='weather'>wether </label>
-        <input
-          value={weather}
-          id='weather'
-          onChange={(event) =>
-            setWeather(event.target.value as Weather)
-          }
-        />
-        <br />
-        <label htmlFor='comment'>comment </label>
-        <input
-          value={comment}
+          type='text'
           id='comment'
+          name='comment'
+          value={comment}
           onChange={(event) => setComment(event.target.value)}
         />
         <br />
