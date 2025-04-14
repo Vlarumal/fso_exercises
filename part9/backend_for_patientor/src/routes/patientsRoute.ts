@@ -17,6 +17,21 @@ patientsRouter.get(
   }
 );
 
+patientsRouter.get(
+  '/:id',
+  (req, res: Response<PatientEntry | undefined>) => {
+    const patient = patientsService.findById(req.params.id);
+
+    if (patient) {
+      res.send(patient);
+      return;
+    }
+
+    res.sendStatus(404);
+    return;
+  }
+);
+
 const newPatientParser = (
   req: Request,
   _res: Response,
