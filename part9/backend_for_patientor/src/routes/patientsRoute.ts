@@ -5,7 +5,7 @@ import {
   NonSensitivePatientEntry,
   PatientEntry,
 } from '../types';
-import { NewEntrySchema } from '../utils';
+import { NewPatientEntrySchema } from '../utils';
 import { z } from 'zod';
 
 const patientsRouter = express.Router();
@@ -38,7 +38,7 @@ const newPatientParser = (
   next: NextFunction
 ) => {
   try {
-    NewEntrySchema.parse(req.body);
+    NewPatientEntrySchema.parse(req.body);
     next();
   } catch (error: unknown) {
     next(error);
