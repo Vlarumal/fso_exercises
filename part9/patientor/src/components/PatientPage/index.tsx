@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
-import { Patient } from '../../types';
+import { PatientEntry } from '../../types';
 import { Female, Male } from '@mui/icons-material';
 import patientService from '../../services/patients';
 import { useEffect, useState } from 'react';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [patient, setPatient] = useState<Patient | null>(null);
+  const [patient, setPatient] = useState<PatientEntry | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -18,7 +18,7 @@ const PatientPage = () => {
     });
   }, [id]);
 
-  const getGenderIcon = (gender: Patient['gender']) => {
+  const getGenderIcon = (gender: PatientEntry['gender']) => {
     switch (gender) {
       case 'male':
         return <Male />;
@@ -42,6 +42,29 @@ const PatientPage = () => {
       </h2>
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
+
+      {patient.entries && patient.entries.length > 0 && (
+        <section>
+          <h2>entries</h2>
+          {patient.entries.map((entry) => (
+            <article key={entry.id}>
+              <div>
+                {entry.date} <em>{entry.description}</em>
+              </div>
+
+              {entry.diagnosisCodes && (
+                <section>
+                  <ul>
+                    {entry.diagnosisCodes.map((code: string) => (
+                      <li key={code}>{code}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+            </article>
+          ))}
+        </section>
+      )}
     </div>
   );
 };
