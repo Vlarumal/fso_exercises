@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { DiagnosisEntry, PatientEntry } from '../../types';
-import { Female, Male } from '@mui/icons-material';
+import { getIcon } from '../../utils';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnoses';
 import { useEffect, useState } from 'react';
+import { Card } from '@mui/material';
+import EntryDetails from './EntryDetails';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,24 +48,6 @@ const PatientPage = () => {
       });
   }, []);
 
-  // const diagnosesMemo = useMemo(() => {
-  //   if (!diagnoses) return null;
-  //   return diagnoses;
-  // });
-
-  const getGenderIcon = (gender: PatientEntry['gender']) => {
-    switch (gender) {
-      case 'male':
-        return <Male />;
-      case 'female':
-        return <Female />;
-      case 'other':
-        break;
-      default:
-        break;
-    }
-  };
-
   const getDiagnosisByCode = (code: string) => {
     if (!diagnoses) return 'No diagnoses';
 
@@ -79,7 +63,7 @@ const PatientPage = () => {
   return (
     <div>
       <h2>
-        {patient.name} {getGenderIcon(patient.gender)}
+        {patient.name} {getIcon(patient.gender)}
       </h2>
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
@@ -89,19 +73,30 @@ const PatientPage = () => {
           <h2>entries</h2>
           {patient.entries.map((entry) => (
             <article key={entry.id}>
-              <div>
-                {entry.date} <em>{entry.description}</em>
-              </div>
+              <Card
+                variant='outlined'
+                sx={{
+                  marginBottom: 1,
+                  borderColor: 'black',
+                  paddingLeft: 1,
+                }}
+              >
+                <EntryDetails entry={entry} />
+                diagnose by {entry.specialist}
+              </Card>
 
               {entry.diagnosisCodes && (
                 <section>
-                  <ul>
-                    {entry.diagnosisCodes.map((code: string) => (
-                      <li key={code}>
-                        {code} {getDiagnosisByCode(code)}
-                      </li>
-                    ))}
-                  </ul>
+                  <fieldset>
+                    <legend>Diagnoses</legend>
+                    <ul>
+                      {entry.diagnosisCodes.map((code: string) => (
+                        <li key={code}>
+                          {code} {getDiagnosisByCode(code)}
+                        </li>
+                      ))}
+                    </ul>
+                  </fieldset>
                 </section>
               )}
             </article>
