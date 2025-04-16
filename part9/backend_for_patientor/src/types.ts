@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { NewPatientEntrySchema } from './utils';
+import { EntrySchema, NewPatientEntrySchema } from './utils';
 
 export interface DiagnosisEntry {
   code: string;
@@ -14,7 +14,7 @@ export interface PatientEntry {
   occupation: string;
   gender: Gender;
   dateOfBirth: string;
-  entries?: Entry[];
+  entries: Entry[];
 }
 
 export enum Gender {
@@ -24,6 +24,10 @@ export enum Gender {
 }
 
 export type NewPatientEntry = z.infer<typeof NewPatientEntrySchema>;
+export type NewPatientEntryWithoutEntries = UnionOmit<
+  NewPatientEntry,
+  'entries'
+>;
 export type NonSensitivePatientEntry = UnionOmit<
   PatientEntry,
   'ssn' | 'entries'
@@ -79,5 +83,7 @@ type UnionOmit<
   T,
   K extends string | number | symbol
 > = T extends unknown ? Omit<T, K> : never;
+
+type NewEntry = z.infer<typeof EntrySchema>;
 // Define Entry without the 'id' property
-// type EntryWithoutId = UnionOmit<Entry, 'id'>;
+export type NewEntryWithoutId = UnionOmit<NewEntry, 'id'>;

@@ -1,11 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express';
 import patientsService from '../services/patientsService';
 import {
+  NewEntryWithoutId,
   NewPatientEntry,
   NonSensitivePatientEntry,
   PatientEntry,
 } from '../types';
-import { NewPatientEntrySchema } from '../utils';
+import { EntrySchema, NewPatientEntrySchema } from '../utils';
 import { z } from 'zod';
 
 const patientsRouter = express.Router();
@@ -45,6 +46,19 @@ const newPatientParser = (
   }
 };
 
+const newEntryParser = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  try {
+    EntrySchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
 const errorMiddleWare = (
   error: unknown,
   _req: Request,
@@ -65,8 +79,34 @@ patientsRouter.post(
     req: Request<unknown, unknown, NewPatientEntry>,
     res: Response<PatientEntry>
   ) => {
-    const addedEntry = patientsService.addPatient(req.body);
-    res.json(addedEntry);
+    const addedPatientEntry = patientsService.addPatient(req.body);
+    res.json(addedPatientEntry);
+  }
+);
+
+patientsRouter.post(
+  '/:id/entries',
+  newEntryParser,
+  (
+    req: Request<{ id: string }, unknown, NewEntryWithoutId>,
+    res: Response
+  ) => {
+    const patientId = req.params.id;
+    const patient = patientsService.findById(patientId);
+    const newEntryData = req.body;
+
+    if (!patient) {
+      res.status(404).json({ error: 'Patient not found' });
+      return;
+    }
+
+    const addedEntry = patientsService.addEntry(
+      patient,
+      newEntryData
+    );
+
+    res.status(201).json(addedEntry);
+    return;
   }
 );
 
