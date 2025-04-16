@@ -1,22 +1,55 @@
 import { useParams } from 'react-router-dom';
-import { PatientEntry } from '../../types';
+import { DiagnosisEntry, PatientEntry } from '../../types';
 import { Female, Male } from '@mui/icons-material';
 import patientService from '../../services/patients';
+import diagnosisService from '../../services/diagnoses';
 import { useEffect, useState } from 'react';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<PatientEntry | null>(null);
+  const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[] | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (!id) {
       return;
     }
 
-    patientService.getById(id).then((response) => {
-      setPatient(response);
-    });
+    setLoading(true);
+
+    patientService
+      .getById(id)
+      .then((response) => {
+        setPatient(response);
+        setLoading(false);
+      })
+      .catch(() => {
+        setErrorMessage('Failed to get patient data');
+        setLoading(false);
+      });
   }, [id]);
+
+  useEffect(() => {
+    diagnosisService
+      .getAllDiagnoses()
+      .then((response) => {
+        setDiagnoses(response);
+      })
+      .catch(() => {
+        setErrorMessage('Failed to load diagnoses');
+      });
+  }, []);
+
+  // const diagnosesMemo = useMemo(() => {
+  //   if (!diagnoses) return null;
+  //   return diagnoses;
+  // });
 
   const getGenderIcon = (gender: PatientEntry['gender']) => {
     switch (gender) {
@@ -31,9 +64,17 @@ const PatientPage = () => {
     }
   };
 
-  if (!patient) {
-    return <div>Something went wrong</div>;
-  }
+  const getDiagnosisByCode = (code: string) => {
+    if (!diagnoses) return 'No diagnoses';
+
+    const diagnosis = diagnoses.find((d) => d.code === code);
+
+    return diagnosis ? diagnosis.name : 'Unknown diagnosis';
+  };
+
+  if (loading) return <div>Loading patient data...</div>;
+  if (errorMessage) return <div>{errorMessage}</div>;
+  if (!patient) return <div>No patient found</div>;
 
   return (
     <div>
@@ -56,7 +97,9 @@ const PatientPage = () => {
                 <section>
                   <ul>
                     {entry.diagnosisCodes.map((code: string) => (
-                      <li key={code}>{code}</li>
+                      <li key={code}>
+                        {code} {getDiagnosisByCode(code)}
+                      </li>
                     ))}
                   </ul>
                 </section>
