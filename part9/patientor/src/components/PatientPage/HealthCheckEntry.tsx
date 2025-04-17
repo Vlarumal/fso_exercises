@@ -13,6 +13,7 @@ const HealthCheckEntryComponent: React.FC<{
         <em>{entry.description}</em>
       </div>
       <div>{getIcon(entry.healthCheckRating)}</div>
+      <div>diagnose by {entry.specialist}</div>
     </section>
   );
 };

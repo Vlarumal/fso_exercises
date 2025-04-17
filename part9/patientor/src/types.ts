@@ -4,7 +4,7 @@ export interface DiagnosisEntry {
   latin?: string;
 }
 
-export interface PatientEntry {
+export interface Patient {
   id: string;
   name: string;
   occupation: string;
@@ -14,7 +14,7 @@ export interface PatientEntry {
   entries?: Entry[];
 }
 
-export type PatientFormValues = Omit<PatientEntry, "id" | "entries">;
+export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
 
 export enum Gender {
   Female = 'female',
@@ -67,3 +67,11 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+// Define special omit for unions
+type UnionOmit<
+  T,
+  K extends string | number | symbol
+> = T extends unknown ? Omit<T, K> : never;
+
+export type NewEntryFormValues = UnionOmit<Entry, 'id'>;

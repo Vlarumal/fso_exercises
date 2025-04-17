@@ -13,6 +13,8 @@ const HospitalEntryComponent: React.FC<{ entry: HospitalEntry }> = ({
       <div>
         <em>{entry.description}</em>
       </div>
+      <div>diagnose by {entry.specialist}</div>
+      <div>discharged {entry.discharge.date} {entry.discharge.criteria}</div>
     </section>
   );
 };

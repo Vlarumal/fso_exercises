@@ -12,6 +12,13 @@ const OccupationalHealthcareEntryComponent: React.FC<{
       <div>
         <em>{entry.description}</em>
       </div>
+      <div>diagnose by {entry.specialist}</div>
+      {entry.sickLeave && (
+        <div>
+          Sick leave: {entry.sickLeave?.startDate} –{' '}
+          {entry.sickLeave?.endDate}
+        </div>
+      )}
     </section>
   );
 };

@@ -1,15 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { DiagnosisEntry, PatientEntry } from '../../types';
+import { DiagnosisEntry, Patient } from '../../types';
 import { getIcon } from '../../utils';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnoses';
 import { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
 import EntryDetails from './EntryDetails';
+import AddEntryForm from './AddEntryForm';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [patient, setPatient] = useState<PatientEntry | null>(null);
+  const [patient, setPatient] = useState<Patient | null>(null);
   const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[] | null>(
     null
   );
@@ -68,6 +69,10 @@ const PatientPage = () => {
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
 
+      <section>
+        <AddEntryForm setPatient={setPatient} />
+      </section>
+
       {patient.entries && patient.entries.length > 0 && (
         <section>
           <h2>entries</h2>
@@ -82,12 +87,16 @@ const PatientPage = () => {
                 }}
               >
                 <EntryDetails entry={entry} />
-                diagnose by {entry.specialist}
               </Card>
 
               {entry.diagnosisCodes && (
                 <section>
-                  <fieldset>
+                  <fieldset
+                    style={{
+                      marginBottom: '1rem',
+                      marginLeft: '2rem',
+                    }}
+                  >
                     <legend>Diagnoses</legend>
                     <ul>
                       {entry.diagnosisCodes.map((code: string) => (
