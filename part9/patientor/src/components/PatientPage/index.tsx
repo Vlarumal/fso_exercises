@@ -4,52 +4,46 @@ import { getIcon } from '../../utils';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnoses';
 import { useEffect, useState } from 'react';
-import { Card } from '@mui/material';
+import { Alert, Box, Card, CircularProgress } from '@mui/material';
 import EntryDetails from './EntryDetails';
 import AddEntryForm from './AddEntryForm';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[] | null>(
-    null
-  );
+  const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(
     null
   );
 
   useEffect(() => {
-    if (!id) {
-      return;
-    }
+    const getData = async () => {
+      if (!id) return;
 
-    setLoading(true);
+      try {
+        setLoading(true);
+        const [patientData, diagnosesData] = await Promise.all([
+          patientService.getById(id),
+          diagnosisService.getAllDiagnoses(),
+        ]);
+        setPatient(patientData);
+        setDiagnoses(diagnosesData);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : 'Failed to load data'
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    patientService
-      .getById(id)
-      .then((response) => {
-        setPatient(response);
-        setLoading(false);
-      })
-      .catch(() => {
-        setErrorMessage('Failed to get patient data');
-        setLoading(false);
-      });
+    getData();
   }, [id]);
 
-  useEffect(() => {
-    diagnosisService
-      .getAllDiagnoses()
-      .then((response) => {
-        setDiagnoses(response);
-      })
-      .catch(() => {
-        setErrorMessage('Failed to load diagnoses');
-      });
-  }, []);
-
-  const getDiagnosisByCode = (code: string) => {
+  const getDiagnosisByCode = (code: string): string => {
     if (!diagnoses) return 'No diagnoses';
 
     const diagnosis = diagnoses.find((d) => d.code === code);
@@ -57,9 +51,23 @@ const PatientPage = () => {
     return diagnosis ? diagnosis.name : 'Unknown diagnosis';
   };
 
-  if (loading) return <div>Loading patient data...</div>;
-  if (errorMessage) return <div>{errorMessage}</div>;
-  if (!patient) return <div>No patient found</div>;
+  const diagnosisCodesAll = diagnoses.map((d) => d.code);
+
+  if (loading)
+    return (
+      <Box
+        display='flex'
+        justifyContent='center'
+      >
+        <CircularProgress />
+      </Box>
+    );
+
+  if (errorMessage)
+    return <Alert severity='error'>{errorMessage}</Alert>;
+
+  if (!patient)
+    return <Alert severity='warning'>No patient found</Alert>;
 
   return (
     <div>
@@ -70,33 +78,37 @@ const PatientPage = () => {
       <div>occupation: {patient.occupation}</div>
 
       <section>
-        <AddEntryForm setPatient={setPatient} />
+        <AddEntryForm
+          setPatient={setPatient}
+          diagnosisCodesAll={diagnosisCodesAll}
+        />
       </section>
 
       {patient.entries && patient.entries.length > 0 && (
-        <section>
+        <Box>
           <h2>entries</h2>
           {patient.entries.map((entry) => (
-            <article key={entry.id}>
+            <Box
+              mb={1}
+              key={entry.id}
+            >
               <Card
                 variant='outlined'
                 sx={{
-                  marginBottom: 1,
+                  mb: 1,
                   borderColor: 'black',
-                  paddingLeft: 1,
+                  p: 1,
                 }}
               >
                 <EntryDetails entry={entry} />
               </Card>
 
               {entry.diagnosisCodes && (
-                <section>
-                  <fieldset
-                    style={{
-                      marginBottom: '1rem',
-                      marginLeft: '2rem',
-                    }}
-                  >
+                <Box
+                  ml={2}
+                  mb={1}
+                >
+                  <fieldset style={{}}>
                     <legend>Diagnoses</legend>
                     <ul>
                       {entry.diagnosisCodes.map((code: string) => (
@@ -106,11 +118,11 @@ const PatientPage = () => {
                       ))}
                     </ul>
                   </fieldset>
-                </section>
+                </Box>
               )}
-            </article>
+            </Box>
           ))}
-        </section>
+        </Box>
       )}
     </div>
   );
