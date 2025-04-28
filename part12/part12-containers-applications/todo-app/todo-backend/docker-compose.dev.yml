@@ -18,7 +18,9 @@ services:
      - 6378:6379
     # environment:
     #  REDIS_URL: 'redis://localhost:6378'
-    command:
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - ./redis_data:/data
       
 
 volumes:
