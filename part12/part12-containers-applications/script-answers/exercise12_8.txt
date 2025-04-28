@@ -1,0 +1,164 @@
+Script started on 2025-04-28 09:40:10+03:00 [TERM="xterm-256color" TTY="/dev/pts/8" COLUMNS="212" LINES="10"]
+[?2004h]0;vai@mvv: ~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[01;32mvai@mvv[00m:[01;34m~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[00m$ exitscript ../../script-answers/exercise12_8.txtcd fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend/exit[Kscript ../../script-answers/exercise12_8.txtdocker compose -f docker-compose.dev.yml downup -d
+[?2004l[1A[1B[0G[?25l[+] Running 0/1
+ [33m⠋[0m Network todo-backend_default  Creating                                                                                                                                                                      [34m0.0s [0m
+[?25h[1A[1A[0G[?25l[+] Running 0/1
+ [33m⠙[0m Network todo-backend_default  Creating                                                                                                                                                                      [34m0.1s [0m
+[?25h[1A[1A[0G[?25l[+] Running 0/1
+ [33m⠹[0m Network todo-backend_default  Creating                                                                                                                                                                      [34m0.2s [0m
+[?25h[33mWARN[0m[0000] Found orphan containers ([todo-backend-app-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up. 
+[1A[1A[0G[?25l[34m[+] Running 1/2[0m
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠋[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.0s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠙[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.1s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠹[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.2s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠸[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.3s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠼[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.4s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠴[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.5s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠦[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.6s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠧[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.7s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠇[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.8s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠏[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m0.9s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠋[0m Container todo-backend-mongo-1  Creating                                                                                                                                                                    [34m1.0s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠙[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.1s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠹[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.2s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠸[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.3s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠼[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.4s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠴[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.5s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠦[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.6s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠧[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.7s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠇[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.8s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠏[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m1.9s [0m
+[?25h[1A[1A[1A[0G[?25l[+] Running 1/2
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [33m⠋[0m Container todo-backend-mongo-1  Starting                                                                                                                                                                    [34m2.0s [0m
+[?25h[1A[1A[1A[0G[?25l[34m[+] Running 2/2[0m
+ [32m✔[0m Network todo-backend_default    [32mCreated[0m                                                                                                                                                                     [34m0.3s [0m
+ [32m✔[0m Container todo-backend-mongo-1  [32mStarted[0m                                                                                                                                                                     [34m2.0s [0m
+[?25h[?2004h]0;vai@mvv: ~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[01;32mvai@mvv[00m:[01;34m~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[00m$ so[K[Kdocker exec -it todo-backend-mongo-1 bash
+[?2004l[?2004hroot@3788a952ab74:/# mongosh
+[?2004l]0;mongosh mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000Current Mongosh Log ID:	680f232c4b96d16852d861df
+Connecting to:		[1m[32mmongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.0[0m
+Using MongoDB:		8.0.8
+[1m[33mUsing Mongosh[0m:		2.5.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+[1G[0J [1G[?2004h[1G[0Jtest> [7Gshow dbs
+Uncaught [1m[31mMongoServerError[0m[1m[31m[Unauthorized][0m: Command listDatabases requires authentication
+[1G[0Jtest> [7Gdb.auth([32m'[39m[32mr[39m[32mo[39m[32mo[39m[32mt[39m[32m'[39m,[32m'[39m[1G[0Jtest> db.auth([32m'root'[39m,[22G [32m'[39m[32me[39m[32mx[39m[32mm[39m[1G[0Jtest> db.auth([32m'root'[39m, [32m'ex[39m[26G[32ma[39m[32mm[39m[32mp[39m[32ml[39m[32me[39m[32m'[39m)
+Uncaught [1m[31mMongoServerError[0m[1m[31m[AuthenticationFailed][0m: Authentication failed.
+[1G[0Jtest> [7Guse admin
+switched to db admin
+[1G[0Jadmin> [8G[1G[0Jadmin> use admin[17G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> [8G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> use admin[17G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> use admin[17G[1G[0Jadmin> [8G[1G[0Jadmin> use admin[17G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> [8G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> use admin[17G[1G[0Jadmin> [8G[1G[0Jadmin> use admin[17G[1G[0Jadmin> show dbs[16G
+Uncaught [1m[31mMongoServerError[0m[1m[31m[Unauthorized][0m: Command listDatabases requires authentication
+[1G[0Jadmin> [8Gdb.auth([32m'[39m[32mr[39m[32mo[39m[32mo[39m[32mt[39m[32m'[39m, [32m'[39m[32me[39m[32mx[39m[32ma[39m[32mm[39m[32mp[39m[32ml[39m[32me[39m[32m'[39m([1G[0Jadmin> db.auth([32m'root'[39m, [32m'example'[39m[33G)
+{ ok: [33m1[39m }
+[1G[0Jadmin> [8G[1G[0Jadmin> show dbs[16G[1G[0Jadmin> use admin[17G[1G[0Jadmin> show dbs[16G
+[1madmin[0m         100.00 KiB
+[1mconfig[0m         72.00 KiB
+[1mlocal[0m          72.00 KiB
+[1mthe_database[0m   72.00 KiB
+[1G[0Jadmin> [8Guse the_database
+switched to db the_database
+[1G[0Jthe_database> [15Gshow collections
+[1mtodos[0m
+[1G[0Jthe_database> [15Gdb.todos_find({})
+Uncaught [1m[31mTypeError[0m: db.todos_find is not a function
+[1G[0Jthe_database> [15G[1G[0Jthe_database> db.todos_find({})[32G[1D[1G[0Jthe_database> db.todos_find[44m([49m{})[31G[1D[1G[0Jthe_database> db.todos_find([44m{[49m})[30G[1D[1G[0Jthe_database> db.todos_find({[44m}[49m)[29G[1D[1G[0Jthe_database> db.todos_find({}[44m)[49m[28G[1D[1G[0Jthe_database> db.todos_find({})[27G[1D[1D[1D[1G[0Jthe_database> db.todosfind({})[23G[1G[0Jthe_database> db.todos.find({})[24G[8C
+[
+  {
+    _id: ObjectId([32m'680e613647258da7c7d861e0'[39m),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId([32m'680e613647258da7c7d861e1'[39m),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  },
+  {
+    _id: ObjectId([32m'680e642bf555188795195c86'[39m),
+    text: [32m'updated'[39m,
+    __v: [33m0[39m,
+    done: [33mtrue[39m
+  }
+]
+[1G[0Jthe_database> [15Gdb.todos.insertOne({ text[33mtext[39m: [32m"[39m[32mI[39m[32mn[39m[32mc[39m[32mr[39m[32me[39m[32ma[39m[32ms[39m[32me[39m [32mt[39m[32mh[39m[32me[39m [32mn[39m[32mu[39m[32mm[39m[32mb[39m[32me[39m[32mr[39m [32mo[39m[32mf[39m [32mt[39m[32mo[39m[32mo[39m[32ml[39m[32ms[39m [32mi[39m[32mn[39m [32mm[39m[32my[39m [32mt[39m[32mo[39m[32mo[39m[32ml[39m [32mb[39m[32me[39m[32ml[39m[32mt[39m[32m"[39m, d[36mdo[39mdone: fals[33mfalse[39m })
+{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId([32m'680f24e54b96d16852d861e0'[39m)
+}
+[1G[0Jthe_database> [15G[1G[0Jthe_database> db.todos.insertOne({ [33mtext[39m: [32m"Increase the number of tools in my tool belt"[39m, [33mdone[39m: [33mfalse[39m })[104G[1G[0Jthe_database> db.todos.find({})[32G[1G[0Jthe_database> db.todos_find({})[32G[1G[0Jthe_database> db.todos.find({})[32G
+[
+  {
+    _id: ObjectId([32m'680e613647258da7c7d861e0'[39m),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId([32m'680e613647258da7c7d861e1'[39m),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  },
+  {
+    _id: ObjectId([32m'680e642bf555188795195c86'[39m),
+    text: [32m'updated'[39m,
+    __v: [33m0[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId([32m'680f24e54b96d16852d861e0'[39m),
+    text: [32m'Increase the number of tools in my tool belt'[39m,
+    done: [33mfalse[39m
+  }
+]
+[1G[0Jthe_database> [15G[1G[0Jthe_database> [15G[1G[0Jthe_database> [15Gexit
+[?2004l[?2004hroot@3788a952ab74:/# mongosh[Kexit
+[?2004lexit
+[?2004h]0;vai@mvv: ~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[01;32mvai@mvv[00m:[01;34m~/fso/fso_exercises/part12/part12-containers-applications/todo-app/todo-backend[00m$ docker exec -it todo-backend-mongo-1 bash[Kexit
+[?2004lexit
+
+Script done on 2025-04-28 09:53:11+03:00 [COMMAND_EXIT_CODE="0"]
