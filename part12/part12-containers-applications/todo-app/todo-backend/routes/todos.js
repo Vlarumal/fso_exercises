@@ -1,5 +1,6 @@
 const express = require('express');
 const { Todo } = require('../mongo');
+const { setAsync, getAsync } = require('../redis');
 const router = express.Router();
 
 /* GET todos listing. */
@@ -8,12 +9,32 @@ router.get('/', async (_, res) => {
   res.send(todos);
 });
 
+const increaseAddedTodo = async () => {
+  try {
+    let added_todos = await getAsync('added_todos');
+
+    added_todos = parseInt(added_todos, 10) || 0;
+
+    added_todos += 1;
+
+    await setAsync('added_todos', added_todos);
+    return added_todos;
+  } catch (error) {
+    console.error('Failed to update todo count:', error);
+    res.status(500).json({ error: error.message });
+    return;
+  }
+};
+
 /* POST todo to listing. */
 router.post('/', async (req, res) => {
   const todo = await Todo.create({
     text: req.body.text,
     done: false,
   });
+
+  increaseAddedTodo();
+
   res.send(todo);
 });
 
