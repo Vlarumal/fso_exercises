@@ -8,14 +8,12 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     npm ci
 
 FROM dependencies-stage AS test-stage
-ENV VITE_BACKEND_URL=http://localhost:3000/
-
+ENV VITE_BACKEND_URL=http://localhost:80/api/
 COPY . .
 RUN npm run test
 
 FROM test-stage AS build-stage
-ENV VITE_BACKEND_URL=http://localhost:3000/
-
+ENV VITE_BACKEND_URL=http://localhost:80/api/
 COPY . .
 RUN npm run build
 

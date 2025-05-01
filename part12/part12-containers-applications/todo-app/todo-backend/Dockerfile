@@ -10,4 +10,4 @@ ENV DEBUG=todo-express-backend:*
 
 USER node
 
-CMD npm start
+CMD ["npm", "start"]

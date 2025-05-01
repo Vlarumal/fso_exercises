@@ -1,6 +1,69 @@
-node_modules
-dist
-.git
+# Docker Compose Files
+docker-compose*.yml
+docker-compose.*.yml
+compose*.yml
+compose.*.yml
+
+# Version Control
+.git/
 .gitignore
-Dockerfile
-README.md
+.gitattributes
+.gitmodules
+
+# IDE Configs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Runtime Files
+*.log
+*.tmp
+*.pid
+*.DS_Store
+
+# Dependency Directories
+node_modules/
+vendor/
+__pycache__/
+.pnpm-store/
+*.egg-info/
+
+# Build Artifacts
+dist/
+build/
+out/
+*.exe
+*.a
+*.o
+*.so
+
+# Environment Files
+.env
+.env.local
+.env*.local
+.env.dev
+.env.prod
+secrets/
+
+# Documentation
+*.md
+LICENSE
+CHANGELOG
+
+# Test Files
+coverage/
+*.test
+*.spec
+.nyc_output
+
+# System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Custom Extensions
+*.bak
+*.backup
+*.dump
+*.sublime-*
