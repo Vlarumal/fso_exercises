@@ -5,6 +5,8 @@ const { connectToDatabase, sequelize } = require('./utils/db');
 const { PORT } = require('./utils/config');
 const errorHandler = require('./middleware/errorHandler');
 const blogRouter = require('./routes/blogRouter');
+const userRouter = require('./routes/userRouter');
+const loginRouter = require('./routes/loginRouter');
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
+app.use('/api/login', loginRouter);
 
 app.use(errorHandler);
 
