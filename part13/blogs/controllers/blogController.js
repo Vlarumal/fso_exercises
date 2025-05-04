@@ -21,6 +21,7 @@ exports.getAllBlogs = async (req, res, next) => {
 
   try {
     const blogs = await Blog.findAll({
+      order: [['likes', 'DESC']],
       attributes: { exclude: ['userId'] },
       include: {
         model: User,
