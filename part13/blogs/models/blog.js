@@ -15,7 +15,9 @@ Blog.init(
     url: {
       type: DataTypes.STRING,
       allowNull: false,
-      isUrl: true,
+      validate: {
+        isUrl: true,
+      },
     },
     title: {
       type: DataTypes.STRING,
@@ -34,6 +36,14 @@ Blog.init(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 1991,
+        max: new Date().getFullYear(),
+      },
+      allowNull: false,
     },
   },
   {

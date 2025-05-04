@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 const { Blog, User } = require('../models');
 
 const checkToken = (req, res) => {
-  if (req.decodedToken && req.decodedToken.id !== req.blog.userId) {
+  if (!req.decodedToken || req.decodedToken.id !== req.blog.userId) {
     res.status(403).json({ error: 'forbidden' });
     return false;
   }
@@ -43,7 +43,7 @@ exports.createBlog = async (req, res, next) => {
       return res.status(401).json({ error: 'invalid user' });
     }
 
-    const { title, author, url, likes = 0 } = req.body;
+    const { title, author, url, likes = 0, year } = req.body;
 
     if (!title || !url) {
       return res
@@ -51,15 +51,29 @@ exports.createBlog = async (req, res, next) => {
         .json({ error: 'title and url are required' });
     }
 
+    const currentYear = new Date().getFullYear();
+
+    if (!year || year < 1991 || year > currentYear) {
+      return res.status(400).json({
+        error: `year can't be below 1991 or bigger than current year ${currentYear}`,
+      });
+    }
+
     const blog = await Blog.create({
       title,
       author,
       url,
       likes,
+      year,
       userId: user.id,
     });
 
-    return res.status(201).json(blog);
+    const createdBlog = await Blog.findByPk(blog.id, {
+      attributes: { exclude: ['userId'] },
+      include: { model: User, attributes: ['name'] },
+    });
+
+    return res.status(201).json(createdBlog);
   } catch (error) {
     next(error);
   }
