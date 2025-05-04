@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Blog, User } = require('../models');
 
 const checkToken = (req, res) => {
@@ -8,7 +9,15 @@ const checkToken = (req, res) => {
   return true;
 };
 
-exports.getAllBlogs = async (_req, res, next) => {
+exports.getAllBlogs = async (req, res, next) => {
+  const where = {};
+
+  if (req.query.search) {
+    where.title = {
+      [Op.iLike]: `%${req.query.search}%`,
+    };
+  }
+
   try {
     const blogs = await Blog.findAll({
       attributes: { exclude: ['userId'] },
@@ -16,6 +25,7 @@ exports.getAllBlogs = async (_req, res, next) => {
         model: User,
         attributes: ['name'],
       },
+      where,
     });
     return res.json(blogs);
   } catch (error) {
