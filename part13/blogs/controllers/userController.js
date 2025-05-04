@@ -46,10 +46,12 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res, next) => {
   try {
     const updatedData = {};
-    const { name, username } = req.body;
+    const { name, username, disabled } = req.body;
     if (name !== undefined) updatedData.name = req.body.name;
     if (username !== undefined)
       updatedData.username = req.body.username;
+    if (disabled !== undefined)
+      updatedData.disabled = req.body.disabled;
 
     const updatedUser = await req.user.update(updatedData);
     return res.status(200).json(updatedUser);

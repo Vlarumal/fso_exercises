@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const { SECRET } = require('../utils/config');
-
 const User = require('../models/user');
 
 const loginIn = async (req, res) => {
@@ -17,6 +16,12 @@ const loginIn = async (req, res) => {
     return res
       .status(401)
       .json({ error: 'Invalid username or password' });
+  }
+
+  if (user.disabled) {
+    return res.status(401).json({
+      error: 'Account disabled, please contact admin',
+    });
   }
 
   const userForToken = {
