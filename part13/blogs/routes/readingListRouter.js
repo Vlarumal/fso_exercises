@@ -1,4 +1,7 @@
-const addReadingListEntry = require('../controllers/readingListController');
+const {
+  addReadingListEntry,
+  updateReadingListEntry,
+} = require('../controllers/readingListController');
 const tokenExtractor = require('../middleware/tokenExtractor');
 const { userFinderById } = require('../middleware/userFinder');
 
@@ -10,5 +13,7 @@ readingListRouter.post(
   userFinderById,
   addReadingListEntry
 );
+
+readingListRouter.put('/:id', tokenExtractor, updateReadingListEntry);
 
 module.exports = readingListRouter;

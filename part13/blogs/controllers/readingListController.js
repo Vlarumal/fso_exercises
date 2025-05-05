@@ -33,4 +33,38 @@ const addReadingListEntry = async (req, res, next) => {
   }
 };
 
-module.exports = addReadingListEntry;
+const updateReadingListEntry = async (req, res, next) => {
+  try {
+    const readingListEntryToUpdate = await ReadingList.findByPk(
+      req.params.id
+    );
+
+    if (!readingListEntryToUpdate) {
+      return res
+        .status(404)
+        .json({ error: 'Reading list entry not found' });
+    }
+
+    const { read } = req.body;
+
+    if (typeof read !== 'boolean') {
+      return res.status(400).json({
+        error: "read state must be a boolean",
+      });
+    }
+
+    const updatedReadingListEntry =
+      await readingListEntryToUpdate.update({ read });
+    return res.status(200).json({
+      read: updatedReadingListEntry.read,
+      id: updatedReadingListEntry.id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  addReadingListEntry,
+  updateReadingListEntry,
+};
