@@ -56,6 +56,13 @@ const getUser = async (req, res) => {
 };
 
 const getUserById = async (req, res, next) => {
+  const where = {};
+
+  if (req.query.read) {
+    const read = req.query.read;
+    where.read = read;
+  }
+
   try {
     const blogToInclude = {
       model: Blog,
@@ -66,6 +73,7 @@ const getUserById = async (req, res, next) => {
       through: {
         attributes: ['read', 'id'],
         as: 'readinglists',
+        where,
       },
     };
 
