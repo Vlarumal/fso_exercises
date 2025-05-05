@@ -8,6 +8,7 @@ const blogRouter = require('./routes/blogRouter');
 const userRouter = require('./routes/userRouter');
 const loginRouter = require('./routes/loginRouter');
 const authorRouter = require('./routes/authorRouter');
+const readingListRouter = require('./routes/readingListRouter');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/authors', authorRouter);
+app.use('/api/readinglists', readingListRouter);
 
 app.use(errorHandler);
 

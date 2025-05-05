@@ -7,7 +7,7 @@ Blog.belongsTo(User);
 
 User.belongsToMany(Blog, {
   through: ReadingList,
-  as: 'read_blogs',
+  as: 'readings',
 });
 
 Blog.belongsToMany(User, {

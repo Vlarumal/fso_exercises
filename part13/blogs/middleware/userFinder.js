@@ -1,4 +1,15 @@
-const { User } = require('../models');
+const { User, Blog } = require('../models');
+
+const blogToInclude = {
+  model: Blog,
+  as: 'readings',
+  attributes: {
+    exclude: ['userId', 'createdAt', 'updatedAt'],
+  },
+  through: {
+    attributes: [],
+  },
+};
 
 /**
  * Middleware to find a user by username from route params.
@@ -8,7 +19,28 @@ const { User } = require('../models');
 const userFinder = async (req, res, next) => {
   try {
     const { username } = req.params;
-    const user = await User.findOne({ where: { username } });
+
+    // if (!username && !id) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: 'Username or id parameter required' });
+    // }
+
+    let user;
+
+    if (username) {
+      user = await User.findOne({
+        where: { username },
+        attributes: ['name', 'username'],
+        include: [blogToInclude],
+      });
+    }
+    // else if (id) {
+    //   user = await User.findByPk(id, {
+    //     attributes: ['name', 'username'],
+    //     include: [blogToInclude],
+    //   });
+    // }
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });

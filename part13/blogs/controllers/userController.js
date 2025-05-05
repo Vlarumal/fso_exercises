@@ -3,10 +3,13 @@ const { User, Blog } = require('../models');
 const getAllUsers = async (_req, res, next) => {
   try {
     const users = await User.findAll({
-      include: {
-        model: Blog,
-        attributes: { exclude: ['userId'] },
-      },
+      attributes: ['name', 'username'],
+      include: [
+        {
+          model: Blog,
+          attributes: { exclude: ['userId'] },
+        },
+      ],
     });
 
     return res.json(users);
@@ -17,13 +20,15 @@ const getAllUsers = async (_req, res, next) => {
 
 const createUser = async (req, res, next) => {
   try {
-    const { username, name } = req.body;
+    let { username, name } = req.body;
 
     if (!username || !name) {
       return res
         .status(400)
         .json({ error: 'Username and name are required' });
     }
+
+    username = username.toLowerCase();
 
     const isEmailCheck = /^[^\s@]+@[^\s@]+\.[^\s]+$/;
     if (!isEmailCheck.test(username)) {
@@ -32,8 +37,15 @@ const createUser = async (req, res, next) => {
         .json({ error: 'Username must be a valid email address' });
     }
 
+    const existingUser = await User.findOne({ where: { username } });
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ error: 'Username already exists' });
+    }
+
     const user = await User.create({ username, name });
-    return res.status(201).json(user);
+    return res.status(201).json({ username, name });
   } catch (error) {
     next(error);
   }
@@ -41,6 +53,39 @@ const createUser = async (req, res, next) => {
 
 const getUser = async (req, res) => {
   return res.json(req.user);
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const blogToInclude = {
+      model: Blog,
+      as: 'readings',
+      attributes: {
+        exclude: ['userId', 'createdAt', 'updatedAt'],
+      },
+      through: {
+        attributes: [],
+      },
+    };
+
+    const user = await User.findByPk(req.params.id, {
+      include: [blogToInclude],
+    });
+
+    if (user) {
+      return res.json({
+        username: user.username,
+        name: user.name,
+        readings: user.readings,
+      });
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    next(error);
+  }
+
+  // return res.json(req.user);
 };
 
 const updateUser = async (req, res, next) => {
@@ -64,5 +109,6 @@ module.exports = {
   getAllUsers,
   createUser,
   getUser,
+  getUserById,
   updateUser,
 };
