@@ -1,14 +1,6 @@
 const { Op } = require('sequelize');
 const { Blog, User } = require('../models');
 
-const checkToken = (req, res) => {
-  if (!req.decodedToken || req.decodedToken.id !== req.blog.userId) {
-    res.status(403).json({ error: 'forbidden' });
-    return false;
-  }
-  return true;
-};
-
 exports.getAllBlogs = async (req, res, next) => {
   const where = {};
 
@@ -37,12 +29,6 @@ exports.getAllBlogs = async (req, res, next) => {
 
 exports.createBlog = async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.decodedToken.id);
-
-    if (!user) {
-      return res.status(401).json({ error: 'invalid user' });
-    }
-
     const { title, author, url, likes = 0, year } = req.body;
 
     if (!title || !url) {
@@ -55,8 +41,15 @@ exports.createBlog = async (req, res, next) => {
 
     if (!year || year < 1991 || year > currentYear) {
       return res.status(400).json({
-        error: `year can't be below 1991 or bigger than current year ${currentYear}`,
+        error: `Year must be between 1991 and current year ${currentYear}`,
       });
+    }
+
+    const user = req.user;
+    if (!user) {
+      return res
+        .status(401)
+        .json({ error: 'Authentication required' });
     }
 
     const blog = await Blog.create({
@@ -91,8 +84,6 @@ exports.updateBlog = async (req, res, next) => {
         .json({ error: "'likes' field is required" });
     }
 
-    if (!checkToken(req, res)) return;
-
     const { likes } = req.body;
     const updatedBlog = await req.blog.update({ likes });
     return res.status(200).json(updatedBlog);
@@ -103,7 +94,6 @@ exports.updateBlog = async (req, res, next) => {
 
 exports.deleteBlog = async (req, res, next) => {
   try {
-    if (!checkToken(req, res)) return;
     await req.blog.destroy();
     return res.status(204).end();
   } catch (error) {
