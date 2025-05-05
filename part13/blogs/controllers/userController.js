@@ -55,7 +55,7 @@ const getUser = async (req, res) => {
   return res.json(req.user);
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
     const blogToInclude = {
       model: Blog,
@@ -64,7 +64,8 @@ const getUserById = async (req, res) => {
         exclude: ['userId', 'createdAt', 'updatedAt'],
       },
       through: {
-        attributes: [],
+        attributes: ['read', 'id'],
+        as: 'readinglists',
       },
     };
 
