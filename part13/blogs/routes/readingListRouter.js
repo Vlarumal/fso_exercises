@@ -1,7 +1,8 @@
 const {
-  addReadingListEntry,
+  createReadingListEntry,
   updateReadingListEntry,
 } = require('../controllers/readingListController');
+const { authMiddleware } = require('../middleware/authMiddleware');
 const tokenExtractor = require('../middleware/tokenExtractor');
 const { userFinderById } = require('../middleware/userFinder');
 
@@ -10,10 +11,16 @@ const readingListRouter = require('express').Router();
 readingListRouter.post(
   '/',
   tokenExtractor,
+  authMiddleware,
   userFinderById,
-  addReadingListEntry
+  createReadingListEntry
 );
 
-readingListRouter.put('/:id', tokenExtractor, updateReadingListEntry);
+readingListRouter.put(
+  '/:id',
+  tokenExtractor,
+  authMiddleware,
+  updateReadingListEntry
+);
 
 module.exports = readingListRouter;

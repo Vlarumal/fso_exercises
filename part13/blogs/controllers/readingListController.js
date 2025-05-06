@@ -1,6 +1,6 @@
 const { ReadingList } = require('../models');
 
-const addReadingListEntry = async (req, res, next) => {
+const createReadingListEntry = async (req, res, next) => {
   try {
     const userId = req.user?.id;
     const blogId = req.body.blogId;
@@ -22,12 +22,12 @@ const addReadingListEntry = async (req, res, next) => {
       });
     }
 
-    const addedReading = await ReadingList.create({ userId, blogId });
-    const updatedReadingList = await ReadingList.findByPk(
-      addedReading.id
-    );
+    const createdReadingListEntry = await ReadingList.create({
+      userId,
+      blogId,
+    });
 
-    return res.status(201).json(updatedReadingList);
+    return res.status(201).json(createdReadingListEntry);
   } catch (error) {
     next(error);
   }
@@ -49,7 +49,7 @@ const updateReadingListEntry = async (req, res, next) => {
 
     if (typeof read !== 'boolean') {
       return res.status(400).json({
-        error: "read state must be a boolean",
+        error: 'read state must be a boolean',
       });
     }
 
@@ -65,6 +65,6 @@ const updateReadingListEntry = async (req, res, next) => {
 };
 
 module.exports = {
-  addReadingListEntry,
+  createReadingListEntry,
   updateReadingListEntry,
 };

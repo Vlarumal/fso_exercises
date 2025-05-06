@@ -15,6 +15,9 @@ const tokenExtractor = (req, res, next) => {
       console.error('JWT verification error:', error.message);
       return res.status(401).json({ error: 'token invalid' });
     }
+
+    req.token = token;
+    
   } else {
     return res.status(401).json({ error: 'token missing' });
   }
